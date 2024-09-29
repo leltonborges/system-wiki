@@ -1,0 +1,21 @@
+<div>
+	<div class="main-container">
+		<div class="editor-container editor-container_classic-editor editor-container_include-style editor-container_include-block-toolbar"
+			#editorContainerElement>
+			<div class="editor-container__editor">
+				<div #editorElement>
+					<ckeditor [(ngModel)]="model.editorData"
+                    [editor]="Editor"
+                    [config]="config"
+                    *ngIf="isLayoutReady" />
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<section>
+	<button mat-fab extended (click)="onSave()">
+		<mat-icon>favorite</mat-icon>
+		Basic
+	</button>
+</section>

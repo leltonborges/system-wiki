@@ -1,0 +1,43 @@
+import { ToolbarConfig } from '@ckeditor/ckeditor5-core/src/editor/editorconfig';
+
+export const toolbar: ToolbarConfig = {
+  items: [
+    'undo',
+    'redo',
+    '|',
+    'sourceEditing',
+    'showBlocks',
+    '|',
+    'heading',
+    'style',
+    '|',
+    'fontSize',
+    'fontFamily',
+    'fontColor',
+    'fontBackgroundColor',
+    '|',
+    'bold',
+    'italic',
+    'underline',
+    'code',
+    '|',
+    'link',
+    'insertImageViaUrl',
+    'mediaEmbed',
+    'horizontalLine',
+    'pageBreak',
+    'insertTable',
+    'highlight',
+    'blockQuote',
+    'codeBlock',
+    '|',
+    'alignment',
+    '|',
+    'bulletedList',
+    'numberedList',
+    'todoList',
+    'outdent',
+    'indent'
+  ],
+  shouldNotGroupWhenFull: false
+}

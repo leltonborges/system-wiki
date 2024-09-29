@@ -1,0 +1,5 @@
+<section>
+  @for (item of (articles$ | async); track item.id) {
+    <cs-article [article]="item"></cs-article>
+  }
+</section>

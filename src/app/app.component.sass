@@ -1,0 +1,41 @@
+$header-footer-height: 65px
+
+.header
+  position: fixed
+  top: 0
+  z-index: 100
+
+.footer
+  position: fixed
+  bottom: 0
+  z-index: 100
+
+.main
+  display: flex
+  flex-direction: column
+  min-height: 100vh
+
+header, footer
+  height: $header-footer-height
+  background-color: #f8f9fa
+  display: flex
+  justify-content: center
+  align-items: center
+
+mat-sidenav-container
+  flex: 1
+  display: flex
+  padding: 0
+  background-color: #e9ecef
+  overflow: hidden
+
+  mat-sidenav
+    border: none
+    border-radius: 0
+
+.link-wiki
+  text-decoration: none
+  cursor: pointer
+  color: #272822
+  &:active
+    color: inherit

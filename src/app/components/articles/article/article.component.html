@@ -1,0 +1,26 @@
+<mat-card appearance="raised">
+  <mat-card-header>
+    <img mat-card-avatar
+         class="card-avatar"
+         alt="avatar"
+         [width]="40"
+         [height]="40"
+         ngSrc="https://material.angular.io/assets/img/examples/shiba1.jpg">
+    <mat-card-title>{{ article.author }}</mat-card-title>
+    <mat-card-subtitle>{{ article.tag }}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <img alt="card"
+         *ngIf="article.linkImg"
+         class="card-img"
+         mat-card-image
+         [src]="article.linkImg">
+    <p class="ellipsis">
+      {{ article.resume }}
+    </p>
+  </mat-card-content>
+  <mat-card-footer class="card-footer">
+    <button mat-button (click)="openArticle()">Continue lendo</button>
+    <span class="card-data">{{ article.dtPublication }}</span>
+  </mat-card-footer>
+</mat-card>

@@ -1,0 +1,18 @@
+<div>
+	<div class="main-container">
+		<div class="editor-container editor-container_document-editor editor-container_include-minimap" #editorContainerElement>
+			<div class="editor-container__menu-bar" #editorMenuBarElement></div>
+			<div class="editor-container__toolbar" #editorToolbarElement></div>
+			<div class="editor-container__minimap-wrapper">
+				<div class="editor-container__editor-wrapper">
+					<div class="editor-container__editor">
+						<div #editorElement>
+							<ckeditor [editor]="Editor" [config]="config" (ready)="onReady($event)" *ngIf="isLayoutReady" />
+						</div>
+					</div>
+				</div>
+				<div class="editor-container__sidebar editor-container__sidebar_minimap"><div #editorMinimapElement></div></div>
+			</div>
+		</div>
+	</div>
+</div>
