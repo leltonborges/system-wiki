@@ -1,0 +1,55 @@
+<main>
+  <h3 class="mt-15">Novo artigo</h3>
+  <mat-stepper orientation="vertical" [linear]="false" #stepper>
+    <mat-step [stepControl]="formURL">
+      <form [formGroup]="formURL" class="d-flex">
+        <ng-template matStepLabel>URL da imagem principal para o artigo</ng-template>
+        <mat-form-field>
+          <mat-label>URL</mat-label>
+          <input type="url"
+                 matTooltip="A URL deve termina com [jpg, jpeg, png, gif]"
+                 matTooltipPosition="above"
+                 matInput
+                 formControlName="url"
+                 placeholder="https://www.example.com">
+          <mat-hint>Imagem do artigo</mat-hint>
+          @if (isTouched('url') && getError('url', 'invalidImageUrl')) {
+            <mat-error>Url invalida</mat-error>
+          }
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperNext>Próximo</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="formResume">
+      <form [formGroup]="formResume" class="d-flex">
+        <ng-template matStepLabel>Fill out your address</ng-template>
+        <mat-form-field>
+          <mat-label>Tag</mat-label>
+          <mat-select formControlName="tag">
+            <mat-option value="one">First option</mat-option>
+            <mat-option value="two">Second option</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="field-textarea">
+          <mat-label>Resumo</mat-label>
+          <textarea matInput
+                    formControlName="resume"></textarea>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperPrevious>Voltar</button>
+          <button mat-button matStepperNext>Próximo</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Done</ng-template>
+      <cs-article-ckeditor class="mt-15"/>
+      <div>
+        <button mat-button matStepperPrevious>Voltar</button>
+        <button mat-button (click)="stepper.reset()">Reset</button>
+      </div>
+    </mat-step>
+  </mat-stepper>
+</main>

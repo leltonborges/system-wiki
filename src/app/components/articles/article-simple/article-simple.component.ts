@@ -41,7 +41,7 @@ import {
 import { FormsModule } from '@angular/forms';
 
 @Component({
-             selector: 'cs-root',
+             selector: 'cs-article-ckeditor',
              standalone: true,
              imports: [NgIf, CKEditorModule, MatButtonModule, MatDividerModule, MatIconModule, FormsModule],
              templateUrl: './article-simple.component.html',
@@ -57,7 +57,7 @@ export class ArticleSimpleComponent
   public Editor = ClassicEditor;
   public config: EditorConfig = {};
   public model = {
-    editorData: '<p>Hello, world!</p>'
+    editorData: '<h2>Abraçando Inovações</h2><p>Cada nova ideia é uma porta aberta para oportunidades ilimitadas.</p>'
   };
 
   public ngAfterViewInit(): void {
@@ -71,7 +71,6 @@ export class ArticleSimpleComponent
       heading,
       htmlSupport,
       image,
-      initialData: '<h2>Congratulations on setting up CKEditor 5! 🎉</h2>',
       language,
       link,
       list,
@@ -86,12 +85,6 @@ export class ArticleSimpleComponent
 
     this.isLayoutReady = true;
     this.changeDetector.detectChanges();
-  }
-
-  public onChange({ editor }: ChangeEvent) {
-    const data = editor.getData();
-
-    console.log(data);
   }
 
   onSave() {

@@ -3,32 +3,41 @@
     <mat-toolbar class="header">
       <button mat-icon-button
               (click)="sidenav.toggle()"
-              class="example-icon"
-              aria-label="Example icon-button with menu icon">
+              aria-label="Ocutar ou mostrar menu lateral">
         <mat-icon>menu</mat-icon>
       </button>
       <a class="link-wiki"
          [routerLink]="['/']">
         <h3>Sistem Wiki - UDF</h3>
       </a>
-      <span class="example-spacer"></span>
+      <span class="spacer"></span>
       <button mat-icon-button
-              class="example-icon favorite-icon"
-              aria-label="Example icon-button with heart icon">
-        <mat-icon>code</mat-icon>
+              [routerLink]="['article', 'simple']"
+              aria-label="Criar um novo artigo">
+        <mat-icon>editor</mat-icon>
       </button>
-      <button mat-icon-button class="example-icon"
-              aria-label="Example icon-button with share icon">
-        <mat-icon>share</mat-icon>
-      </button>
+      <a mat-icon-button
+         class="link-github"
+         aria-label="Github do projeto"
+         href="https://github.com/leltonborges"
+         target="_blank">
+        <sc-icon [icon]="['fab', 'github']"
+                 animation="fade"/>
+      </a>
     </mat-toolbar>
   </header>
   <mat-sidenav-container>
-    <mat-sidenav #sidenav opened mode="side">
+    <mat-sidenav #sidenav
+                 opened
+                 [mode]="mobileQuery.matches ? 'over' : 'side'"
+                 [fixedInViewport]="mobileQuery.matches"
+                 fixedTopGap="56">
       Sidenav content
     </mat-sidenav>
     <mat-sidenav-content>
-      <router-outlet></router-outlet>
+      <main class="main-sidenav-content">
+        <router-outlet></router-outlet>
+      </main>
     </mat-sidenav-content>
   </mat-sidenav-container>
   <footer>

@@ -29,9 +29,19 @@ mat-sidenav-container
   background-color: #e9ecef
   overflow: hidden
 
-  mat-sidenav
+  mat-sidenav, .mat-drawer
     border: none
     border-radius: 0
+    max-width: 360px
+
+  mat-sidenav-content
+    flex: 1
+    display: flex
+    flex-wrap: wrap
+    justify-content: center
+
+    .main-sidenav-content
+      max-width: 1024px
 
 .link-wiki
   text-decoration: none
@@ -39,3 +49,9 @@ mat-sidenav-container
   color: #272822
   &:active
     color: inherit
+
+.link-github
+  margin: 0 5px
+
+.spacer
+  flex: 1 1 auto
