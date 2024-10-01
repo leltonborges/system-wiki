@@ -16,7 +16,7 @@
          mat-card-image
          [src]="article.linkImg">
     <p class="ellipsis">
-      {{ article.resume }}
+      {{ article.resume ?? article.title }}
     </p>
   </mat-card-content>
   <mat-card-footer class="card-footer">

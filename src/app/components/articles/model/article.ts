@@ -1,12 +1,12 @@
 export interface Article {
-  id: string,
+  id?: string,
   title: string,
-  resume: string,
+  resume?: string,
   content: string,
   author: string;
   tag: string;
   dtPublication: string;
-  linkImg: string | null;
+  linkImg?: string;
 }
 
 export type Articles = Array<Article>;

@@ -44,11 +44,11 @@ import { FormsModule } from '@angular/forms';
              selector: 'cs-article-ckeditor',
              standalone: true,
              imports: [NgIf, CKEditorModule, MatButtonModule, MatDividerModule, MatIconModule, FormsModule],
-             templateUrl: './article-simple.component.html',
-             styleUrls: ['./article-simple.component.sass'],
+             templateUrl: './article-ckeditor.component.html',
+             styleUrls: ['./article-ckeditor.component.sass'],
              encapsulation: ViewEncapsulation.None
            })
-export class ArticleSimpleComponent
+export class ArticleCKEditorComponent
   implements AfterViewInit {
 
   constructor(private changeDetector: ChangeDetectorRef) {}
@@ -56,9 +56,7 @@ export class ArticleSimpleComponent
   public isLayoutReady = false;
   public Editor = ClassicEditor;
   public config: EditorConfig = {};
-  public model = {
-    editorData: '<h2>Abraçando Inovações</h2><p>Cada nova ideia é uma porta aberta para oportunidades ilimitadas.</p>'
-  };
+  public articleData = '<h2>Abraçando Inovações</h2><p>Cada nova ideia é uma porta aberta para oportunidades ilimitadas.</p>';
 
   public ngAfterViewInit(): void {
     this.config = {
@@ -85,9 +83,5 @@ export class ArticleSimpleComponent
 
     this.isLayoutReady = true;
     this.changeDetector.detectChanges();
-  }
-
-  onSave() {
-    console.log(this.model.editorData);
   }
 }

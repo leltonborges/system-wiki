@@ -1,4 +1,8 @@
-import { Component } from '@angular/core';
+import {
+  Component,
+  inject,
+  ViewChild
+} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -9,11 +13,24 @@ import {
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { ArticleSimpleComponent } from '@c/articles/article-simple/article-simple.component';
+import { ArticleCKEditorComponent } from '@c/articles/article-ckeditor/article-ckeditor.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatStepperModule } from '@angular/material/stepper';
+import {
+  MatStepper,
+  MatStepperModule
+} from '@angular/material/stepper';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { imageUrlValidator } from '@c/articles/validator/image-url.validator';
+import {
+  MatDialog,
+  MatDialogRef
+} from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '@c/core/confirmation-dialog/confirmation-dialog.component';
+import { DialogContent } from '../../../core/model/dialog-content';
+import { Article } from '@c/articles/model/article';
+import { ArticleService } from '@c/articles/service/article.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
              selector: 'cs-article-new',
@@ -25,43 +42,147 @@ import { imageUrlValidator } from '@c/articles/validator/image-url.validator';
                        MatTooltipModule,
                        MatStepperModule,
                        MatButtonModule,
-                       ArticleSimpleComponent],
+                       MatIconModule,
+                       ArticleCKEditorComponent],
              templateUrl: './article-new.component.html',
              styleUrl: './article-new.component.sass'
            })
 export class ArticleNewComponent {
-  formURL!: FormGroup;
+  private readonly dialog = inject(MatDialog);
+  @ViewChild('stepper')
+  private readonly stepper!: MatStepper;
+  @ViewChild('articleCKEditor')
+  private readonly articleCKEditor!: ArticleCKEditorComponent;
+  formTitleUrl!: FormGroup;
   formResume!: FormGroup;
 
-  constructor(private _formBuilder: FormBuilder) {
-     this.formURL = this.createFormURL();
-     this.formResume = this.createdFormResume()
+  constructor(private _formBuilder: FormBuilder,
+              private _articleService: ArticleService,
+              private _snackBar: MatSnackBar) {
+    this.formTitleUrl = this.createFormTitleURL();
+    this.formResume = this.createdFormResume()
   }
+
   private createdFormResume(): FormGroup {
     return this._formBuilder
                .group(
                  {
-                   resume: new FormControl('', [Validators.required]),
-                   tag: new FormControl('#DevOps', [Validators.required])
+                   resume: new FormControl(''),
+                   tag: new FormControl('', [Validators.required])
                  }
                )
   }
 
-  private createFormURL(): FormGroup {
+  private createFormTitleURL(): FormGroup {
     return this._formBuilder.group(
       {
-        url: new FormControl('', [Validators.required, imageUrlValidator()]),
+        title: new FormControl('', [Validators.required,
+                                    Validators.minLength(10),
+                                    Validators.pattern(/[A-Za-z0-9]/)]),
+        url: new FormControl('', [Validators.required, imageUrlValidator()])
       }
     )
   }
 
-  getError(inputName: string,
-           errorName: string): boolean {
-    return this.formURL.get(inputName)?.errors?.[errorName];
+  private openDialog(content: DialogContent,
+                     enterDuration?: number,
+                     exitDuration?: number): MatDialogRef<ConfirmationDialogComponent> {
+    return this.dialog
+               .open(ConfirmationDialogComponent,
+                     {
+                       data: content,
+                       enterAnimationDuration: enterDuration,
+                       exitAnimationDuration: exitDuration
+                     })
   }
 
-  isTouched(inputName: string): boolean | undefined {
-    return this.formURL.get(inputName)?.touched;
+  reset() {
+    this.openModal('Resfazer tudo',
+                   'Tem certezar que deseja desfazer tudo e fazer novamente?')
+        .afterClosed()
+        .subscribe(result => {
+                     if(result) this.stepper.reset();
+                   }
+        );
   }
 
+  save() {
+    this.openModal('Salvar Artigo',
+                   'Tem certezar que deseja salvar este artigo?')
+        .afterClosed()
+        .subscribe((result: boolean) => this.processToSave(result))
+  }
+
+  private processToSave(result: boolean) {
+    if(result && this.formResume.valid && this.formTitleUrl.valid) {
+      const article = this.mountNewArticle();
+      this._articleService.save(article)
+          .subscribe({
+                       next: (result) => {
+                         if(result) this.showMessage('Artigo salvo com sucesso!!!');
+                         else this.showMessage('Falha ao salvar o artigo!!');
+                       },
+                       error: (error) => {
+                         this.showMessage('Algo deu errado ao salvar o artigo.');
+                         console.error('Erro:', error);
+                       }
+                     });
+
+    }
+  }
+
+  private showMessage(msg: string) {
+    this._snackBar.open(msg,
+                        'Close',
+                        {
+                          duration: 5000,
+                          horizontalPosition: 'end',
+                          verticalPosition: 'top'
+                        });
+  }
+
+  private openModal(title: string,
+                    message: string): MatDialogRef<ConfirmationDialogComponent> {
+    return this.openDialog({ message, title }, 200, 200);
+  }
+
+  private mountNewArticle(): Article {
+    const { title, url } = this.formTitleUrl.controls;
+    const { resume, tag } = this.formResume.controls;
+    return {
+      author: 'Jose Arnaldo',
+      content: this.articleCKEditor.articleData,
+      linkImg: url?.value,
+      resume: resume?.value,
+      dtPublication: new Date().toLocaleDateString(),
+      tag: tag.value,
+      title: title.value
+
+    }
+  }
+
+  urlErrorMessage(): string {
+    const { url } = this.formTitleUrl.controls;
+    if(url.touched) {
+      if(url.hasError('required')) return ('URL é obrigatório.')
+      else if(url.hasError('invalidImageUrl')) return ('URL invalido')
+    }
+    return ''
+  }
+
+  tagErrorMessage(): string {
+    const { tag } = this.formResume.controls;
+    if(tag.touched && tag.hasError('required')) return 'Campo obrigatório.'
+    return ''
+  }
+
+  titleErrorMessage(): string {
+    const { title } = this.formTitleUrl.controls;
+    if(title.touched) {
+      if(title.hasError('required')) return ('Titulo é obrigatório.')
+      else if(title.hasError('minlength')) return ('Tamanho minimo de 10 carecteres')
+      else if(title.hasError('pattern')) return ('Titulo invalido')
+    }
+    return '';
+  }
 }

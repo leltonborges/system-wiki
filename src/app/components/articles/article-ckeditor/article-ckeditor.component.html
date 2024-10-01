@@ -3,7 +3,7 @@
        class="editor-container editor-container_classic-editor editor-container_include-style editor-container_include-block-toolbar">
     <div class="editor-container__editor">
       <div #editorElement>
-        <ckeditor [(ngModel)]="model.editorData"
+        <ckeditor [(ngModel)]="articleData"
                   [editor]="Editor"
                   [config]="config"
                   *ngIf="isLayoutReady"/>

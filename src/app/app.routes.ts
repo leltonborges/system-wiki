@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { ArticleSimpleComponent } from '@c/articles/article-simple/article-simple.component';
+import { ArticleCKEditorComponent } from '@c/articles/article-ckeditor/article-ckeditor.component';
 import { ArticleListComponent } from '@c/articles/article-list/article-list.component';
 import { articlesPageResolver } from '@c/articles/resolver/articles.page.resolver';
 import { ArticleShowComponent } from '@c/articles/article-show/article-show.component';
@@ -19,7 +19,7 @@ export const routes: Routes = [
   },
   {
     path: 'article/simple',
-    component: ArticleSimpleComponent
+    component: ArticleCKEditorComponent
   },
   {
     path: 'article/word',

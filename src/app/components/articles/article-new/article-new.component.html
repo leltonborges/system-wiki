@@ -1,9 +1,22 @@
 <main>
   <h3 class="mt-15">Novo artigo</h3>
-  <mat-stepper orientation="vertical" [linear]="false" #stepper>
-    <mat-step [stepControl]="formURL">
-      <form [formGroup]="formURL" class="d-flex">
-        <ng-template matStepLabel>URL da imagem principal para o artigo</ng-template>
+  <mat-stepper #stepper
+               orientation="vertical"
+               [linear]="true">
+    <mat-step [stepControl]="formTitleUrl">
+      <form [formGroup]="formTitleUrl"
+            class="d-flex">
+        <ng-template matStepLabel>Titulo e URL da imagem para artigo</ng-template>
+        <mat-form-field>
+          <mat-label>Titulo</mat-label>
+          <input type="text"
+                 matTooltip="Título principal do artigo"
+                 matTooltipPosition="above"
+                 matInput
+                 formControlName="title"
+                 placeholder="Título do artigo">
+            <mat-error>{{ titleErrorMessage() }}</mat-error>
+        </mat-form-field>
         <mat-form-field>
           <mat-label>URL</mat-label>
           <input type="url"
@@ -13,24 +26,29 @@
                  formControlName="url"
                  placeholder="https://www.example.com">
           <mat-hint>Imagem do artigo</mat-hint>
-          @if (isTouched('url') && getError('url', 'invalidImageUrl')) {
-            <mat-error>Url invalida</mat-error>
-          }
+            <mat-error>{{ urlErrorMessage() }}</mat-error>
         </mat-form-field>
         <div>
-          <button mat-button matStepperNext>Próximo</button>
+          <button mat-icon-button
+                  color="primary"
+                  matTooltip="Ir para o próximo passo"
+                  matTooltipPosition="above"
+                  matStepperNext>
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
         </div>
       </form>
     </mat-step>
     <mat-step [stepControl]="formResume">
       <form [formGroup]="formResume" class="d-flex">
-        <ng-template matStepLabel>Fill out your address</ng-template>
+        <ng-template matStepLabel>Resumo e Categoria</ng-template>
         <mat-form-field>
           <mat-label>Tag</mat-label>
           <mat-select formControlName="tag">
             <mat-option value="one">First option</mat-option>
             <mat-option value="two">Second option</mat-option>
           </mat-select>
+            <mat-error>{{ tagErrorMessage() }}</mat-error>
         </mat-form-field>
         <mat-form-field class="field-textarea">
           <mat-label>Resumo</mat-label>
@@ -38,17 +56,49 @@
                     formControlName="resume"></textarea>
         </mat-form-field>
         <div>
-          <button mat-button matStepperPrevious>Voltar</button>
-          <button mat-button matStepperNext>Próximo</button>
+          <button mat-icon-button
+                  color="primary"
+                  matTooltip="Volta para o passo anterior"
+                  matTooltipPosition="above"
+                  matStepperPrevious>
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+          <button mat-icon-button
+                  color="primary"
+                  matTooltip="Ir para o próximo"
+                  matTooltipPosition="above"
+                  matStepperNext>
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
         </div>
       </form>
     </mat-step>
-    <mat-step>
-      <ng-template matStepLabel>Done</ng-template>
-      <cs-article-ckeditor class="mt-15"/>
+    <mat-step class="d-flex">
+      <ng-template matStepLabel>Escreva o artigo</ng-template>
+      <cs-article-ckeditor #articleCKEditor
+                           class="mt-15"/>
       <div>
-        <button mat-button matStepperPrevious>Voltar</button>
-        <button mat-button (click)="stepper.reset()">Reset</button>
+        <button mat-icon-button
+                color="primary"
+                matTooltip="Ir para o próximo"
+                matTooltipPosition="above"
+                matStepperPrevious>
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <button mat-icon-button
+                matTooltip="Desfazer todos os passos"
+                matTooltipPosition="above"
+                color="warn"
+                (click)="reset()">
+          <mat-icon>restart_alt</mat-icon>
+        </button>
+        <button mat-icon-button
+                matTooltip="Salvar artigo"
+                matTooltipPosition="above"
+                (click)="save()"
+                color="accent">
+          <mat-icon>save</mat-icon>
+        </button>
       </div>
     </mat-step>
   </mat-stepper>

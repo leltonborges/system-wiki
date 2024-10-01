@@ -20,4 +20,8 @@ export class ArticleService {
   findByID(id: string): Observable<Article> {
     return this.httpClient.get<Article>(`${ this.API }/articles/${ id }`);
   }
+
+  save(article: Article): Observable<boolean> {
+    return this.httpClient.post<boolean>(`${ this.API }/articles`, article);
+  }
 }
