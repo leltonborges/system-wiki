@@ -67,7 +67,6 @@ import {
   TableToolbar,
   TextPartLanguage,
   TextTransformation,
-  Title,
   TodoList,
   Underline,
   Undo
@@ -141,7 +140,6 @@ export const plugins: Array<PluginConstructor | string> = [
   TableToolbar,
   TextPartLanguage,
   TextTransformation,
-  Title,
   TodoList,
   Underline,
   Undo,

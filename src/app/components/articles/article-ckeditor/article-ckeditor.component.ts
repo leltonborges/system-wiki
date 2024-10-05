@@ -2,16 +2,11 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  Input,
   ViewEncapsulation
 } from '@angular/core';
-import {
-  CommonModule,
-  NgIf
-} from '@angular/common';
-import {
-  ChangeEvent,
-  CKEditorModule
-} from '@ckeditor/ckeditor5-angular';
+import { NgIf } from '@angular/common';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 import {
   ClassicEditor,
@@ -50,15 +45,18 @@ import { FormsModule } from '@angular/forms';
            })
 export class ArticleCKEditorComponent
   implements AfterViewInit {
-
-  constructor(private changeDetector: ChangeDetectorRef) {}
+  @Input({ alias: 'content' })
+  content: string = '';
+  public articleData = '';
 
   public isLayoutReady = false;
   public Editor = ClassicEditor;
   public config: EditorConfig = {};
-  public articleData = '<h2>Abraçando Inovações</h2><p>Cada nova ideia é uma porta aberta para oportunidades ilimitadas.</p>';
+
+  constructor(private readonly changeDetector: ChangeDetectorRef) {}
 
   public ngAfterViewInit(): void {
+    this.articleData = this.content;
     this.config = {
       toolbar,
       plugins,

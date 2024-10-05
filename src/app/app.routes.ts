@@ -33,8 +33,15 @@ export const routes: Routes = [
     }
   },
   {
-    path: 'article/show/:id',
+    path: 'article/show/:articleId',
     component: ArticleShowComponent,
+    resolve: {
+      article: articleIdResolver
+    }
+  },
+  {
+    path: 'article/edit/:articleId',
+    component: ArticleNewComponent,
     resolve: {
       article: articleIdResolver
     }

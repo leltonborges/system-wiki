@@ -42,12 +42,13 @@
     },
     {
       id: 'asdfs424',
-      title: "You've successfully created a CKEditor 5 project",
-      content: '<h1>Congratulations on setting up CKEditor 5! 🎉</h1><p>You\'ve successfully created a CKEditor 5 project. This powerful text editor will enhance your application, enabling rich text editing capabilities that are customizable and easy to use.</p><h3>What\'s next?</h3><ol><li><strong>Integrate into your app</strong>: time to bring the editing into your application. Take the code you created and add to your application.</li><li><strong>Explore features:</strong> Experiment with different plugins and toolbar options to discover what works best for your needs.</li><li><strong>Customize your editor:</strong> Tailor the editor\'s configuration to match your application\'s style and requirements. Or even write your plugin!</li></ol><p>Keep experimenting, and don\'t hesitate to push the boundaries of what you can achieve with CKEditor 5. Your feedback is invaluable to us as we strive to improve and evolve. Happy editing!</p><h3>Helpful resources</h3><ul><li>📝 <a target="_blank" rel="noopener noreferrer" href="https://orders.ckeditor.com/trial/premium-features">Trial sign up</a>,</li><li>📕 <a target="_blank" rel="noopener noreferrer" href="https://ckeditor.com/docs/ckeditor5/latest/installation/index.html">Documentation</a>,</li><li>⭐️ <a target="_blank" rel="noopener noreferrer" href="https://github.com/ckeditor/ckeditor5">GitHub</a> (star us if you can!),</li><li>🏠 <a target="_blank" rel="noopener noreferrer" href="https://ckeditor.com">CKEditor Homepage</a>,</li><li>🧑‍💻 <a target="_blank" rel="noopener noreferrer" href="https://ckeditor.com/ckeditor-5/demo/">CKEditor 5 Demos</a>,</li></ul><h3>Need help?&nbsp;</h3><p>See this text, but the editor is not starting up? Check the browser\'s console for clues and guidance. It may be related to an incorrect license key if you use premium features or another feature-related requirement. If you cannot make it work, file a GitHub issue, and we will help as soon as possible!</p>',
-      author: 'José Arnaldo',
+      author: 'Jose Arnaldo',
+      content: '<p><span style="font-family:\'Times New Roman\', Times, serif;">You\'ve successfully created a CKEditor 5 project. This powerful text editor will enhance your application, enabling rich text editing capabilities that are customizable and easy to use.</span></p><h3><span style="font-family:\'Times New Roman\', Times, serif;">What\'s next?</span></h3><ol><li><span style="font-family:\'Times New Roman\', Times, serif;"><strong>Integrate into your app</strong>: time to bring the editing into your application. Take the code you created and add to your application.</span></li><li><span style="font-family:\'Times New Roman\', Times, serif;"><strong>Explore features:</strong> Experiment with different plugins and toolbar options to discover what works best for your needs.</span></li><li><span style="font-family:\'Times New Roman\', Times, serif;"><strong>Customize your editor:</strong> Tailor the editor\'s configuration to match your application\'s style and requirements. Or even write your plugin!</span></li></ol><p><span style="font-family:\'Times New Roman\', Times, serif;">Keep experimenting, and don\'t hesitate to push the boundaries of what you can achieve with CKEditor 5. Your feedback is invaluable to us as we strive to improve and evolve. Happy editing!</span></p><h3><span style="font-family:\'Times New Roman\', Times, serif;">Helpful resources</span></h3><ul><li><span style="font-family:\'Times New Roman\', Times, serif;">📝 </span><a target="_blank" rel="noopener noreferrer" href="https://orders.ckeditor.com/trial/premium-features"><span style="font-family:\'Times New Roman\', Times, serif;">Trial sign up</span></a><span style="font-family:\'Times New Roman\', Times, serif;">,</span></li><li><span style="font-family:\'Times New Roman\', Times, serif;">📕 </span><a target="_blank" rel="noopener noreferrer" href="https://ckeditor.com/docs/ckeditor5/latest/installation/index.html"><span style="font-family:\'Times New Roman\', Times, serif;">Documentation</span></a><span style="font-family:\'Times New Roman\', Times, serif;">,</span></li><li><span style="font-family:\'Times New Roman\', Times, serif;">⭐️ </span><a target="_blank" rel="noopener noreferrer" href="https://github.com/ckeditor/ckeditor5"><span style="font-family:\'Times New Roman\', Times, serif;">GitHub</span></a><span style="font-family:\'Times New Roman\', Times, serif;"> (star us if you can!),</span></li><li><span style="font-family:\'Times New Roman\', Times, serif;">🏠 </span><a target="_blank" rel="noopener noreferrer" href="https://ckeditor.com"><span style="font-family:\'Times New Roman\', Times, serif;">CKEditor Homepage</span></a><span style="font-family:\'Times New Roman\', Times, serif;">,</span></li><li><span style="font-family:\'Times New Roman\', Times, serif;">🧑‍💻 </span><a target="_blank" rel="noopener noreferrer" href="https://ckeditor.com/ckeditor-5/demo/"><span style="font-family:\'Times New Roman\', Times, serif;">CKEditor 5 Demos</span></a><span style="font-family:\'Times New Roman\', Times, serif;">,</span></li></ul><h3><span style="font-family:\'Times New Roman\', Times, serif;">Need help?&nbsp;</span></h3><p><span style="font-family:\'Times New Roman\', Times, serif;">See this text, but the editor is not starting up? Check the browser\'s console for clues and guidance. It may be related to an incorrect license key if you use premium features or another feature-related requirement. If you cannot make it work, file a GitHub issue, and we will help as soon as possible!</span></p>',
       linkImg: 'https://material.angular.io/assets/img/examples/shiba2.jpg',
+      resume: 'resadt',
+      dtPublication: '05/10/2024',
       tag: '#Python',
-      dtPublication: '10/10/2024'
+      title: 'Edição'
     },
     {
       id: 'asyq34vqwe',
@@ -102,17 +103,20 @@
       name: 'java',
       children: [
         {
-          name: "Spring boot",
+          name: 'Spring boot',
           children: []
         }
       ],
+      id: '9547'
     },
     {
-      name: "python",
-      children: []
+      name: 'python',
+      children: [],
+      id: 'ebda'
     },
     {
-      nama: "DevOps"
+      nama: 'DevOps',
+      id: '76f5'
     }
   ]
 }

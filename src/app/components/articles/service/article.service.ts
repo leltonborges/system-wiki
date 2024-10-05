@@ -10,9 +10,9 @@ import { environment } from '../../../../environments/environment';
             })
 export class ArticleService {
 
-  private API: string = environment.API_ARTICLE_URL;
+  private readonly API: string = environment.API_ARTICLE_URL;
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private readonly httpClient: HttpClient) {}
 
   findAllPage(page: number): Observable<PageArticles> {
     return this.httpClient.get<PageArticles>(`${ this.API }/articles?_page=${ page }&_per_page=25`);
@@ -23,6 +23,7 @@ export class ArticleService {
   }
 
   save(article: Article): Observable<boolean> {
-    return this.httpClient.post<boolean>(`${ this.API }/articles`, article);
+    if(article.id) return this.httpClient.put<boolean>(`${ this.API }/articles/${ article.id }`, article);
+    else return this.httpClient.post<boolean>(`${ this.API }/articles`, article);
   }
 }

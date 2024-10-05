@@ -1,6 +1,7 @@
 import {
+  AfterViewInit,
   Component,
-  inject,
+  OnInit,
   ViewChild
 } from '@angular/core';
 import {
@@ -22,11 +23,14 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { imageUrlValidator } from '@c/articles/validator/image-url.validator';
-import { MatDialog } from '@angular/material/dialog';
 import { Article } from '@c/articles/model/article';
 import { ArticleService } from '@c/articles/service/article.service';
 import { DialogRef } from '@c/core/common/dialog-ref';
 import { MessageRef } from '@c/core/common/message-ref';
+import { ActivatedRoute } from '@angular/router';
+import { map } from 'rxjs';
+import { LoadingComponent } from '@c/core/loading/loading.component';
+import { LoadingService } from '@c/core/loading/loading.service';
 
 @Component({
              selector: 'cs-article-new',
@@ -39,35 +43,112 @@ import { MessageRef } from '@c/core/common/message-ref';
                        MatStepperModule,
                        MatButtonModule,
                        MatIconModule,
-                       ArticleCKEditorComponent],
+                       ArticleCKEditorComponent, LoadingComponent],
              templateUrl: './article-new.component.html',
              styleUrl: './article-new.component.sass'
            })
-export class ArticleNewComponent {
-  private readonly dialog = inject(MatDialog);
+export class ArticleNewComponent
+  implements OnInit,
+             AfterViewInit {
   @ViewChild('stepper')
   private readonly stepper!: MatStepper;
   @ViewChild('articleCKEditor')
   private readonly articleCKEditor!: ArticleCKEditorComponent;
   formTitleUrl!: FormGroup;
   formResume!: FormGroup;
+  private editArticle!: Article;
 
   constructor(private readonly _formBuilder: FormBuilder,
               private readonly _articleService: ArticleService,
+              private readonly _loadingService: LoadingService,
+              private readonly _router: ActivatedRoute,
               private readonly _messageRef: MessageRef,
               private readonly _dialogRef: DialogRef) {
+  }
+
+  get contentArticle(): string {
+    return this.editArticle.content
+  }
+
+  ngAfterViewInit(): void {
+    this.urlErrorMessage();
+    this.tagErrorMessage();
+    this.titleErrorMessage()
+  }
+
+  ngOnInit(): void {
+    this._router
+        .data
+        .pipe(map(data => data['article']))
+        .subscribe({
+                     next: (data: Article) => {
+                       this.editArticle = data;
+                       this._loadingService.hide()
+                     },
+                     error: () => {
+                       this._loadingService.hide()
+                       this._messageRef.error('Erro ao carregar o artigo.');
+                     }
+                   });
     this.formTitleUrl = this.createFormTitleURL();
     this.formResume = this.createdFormResume()
   }
 
   private createdFormResume(): FormGroup {
+    console.log('2: ', this.editArticle);
     return this._formBuilder
                .group(
                  {
-                   resume: new FormControl(''),
-                   tag: new FormControl('', [Validators.required])
+                   resume: new FormControl(this.editArticle?.resume),
+                   tag: new FormControl(this.editArticle?.tag, [Validators.required])
                  }
                )
+  }
+
+  private createFormTitleURL(): FormGroup {
+    return this._formBuilder.group(
+      {
+        title: new FormControl(this.editArticle?.title, [Validators.required,
+                                                         Validators.minLength(5),
+                                                         Validators.pattern(/[A-Za-z0-9]/)]),
+        url: new FormControl(this.editArticle?.linkImg, [Validators.required, imageUrlValidator()])
+      }
+    )
+  }
+
+  private processToSave(result: boolean) {
+    if(result && this.formResume.valid && this.formTitleUrl.valid) {
+      const article = this.mountNewArticle();
+      this._articleService.save(article)
+          .subscribe({
+                       next: this.showMessageAfterSave,
+                       error: (error) => {
+                         this._messageRef.error('Algo deu errado ao salvar o artigo.');
+                         console.error('Erro:', error);
+                       }
+                     });
+
+    }
+  }
+
+  private showMessageAfterSave(result: boolean): void {
+    result ? this._messageRef.success('Artigo salvo com sucesso!!!')
+           : this._messageRef.error('Falha ao salvar o artigo!!');
+  }
+
+  private mountNewArticle(): Article {
+    const { title, url } = this.formTitleUrl.controls;
+    const { resume, tag } = this.formResume.controls;
+    return {
+      id: this.editArticle?.id,
+      author: 'Jose Arnaldo',
+      content: this.articleCKEditor.articleData,
+      linkImg: url?.value,
+      resume: resume?.value,
+      dtPublication: new Date().toLocaleDateString(),
+      tag: tag.value,
+      title: title.value
+    }
   }
 
   titleErrorMessage(): string {
@@ -101,39 +182,6 @@ export class ArticleNewComponent {
         .subscribe((result: boolean) => this.processToSave(result))
   }
 
-  private processToSave(result: boolean) {
-    if(result && this.formResume.valid && this.formTitleUrl.valid) {
-      const article = this.mountNewArticle();
-      this._articleService.save(article)
-          .subscribe({
-                       next: (result) => {
-                         if(result) this._messageRef.success('Artigo salvo com sucesso!!!');
-                         else this._messageRef.error('Falha ao salvar o artigo!!');
-                       },
-                       error: (error) => {
-                         this._messageRef.error('Algo deu errado ao salvar o artigo.');
-                         console.error('Erro:', error);
-                       }
-                     });
-
-    }
-  }
-
-  private mountNewArticle(): Article {
-    const { title, url } = this.formTitleUrl.controls;
-    const { resume, tag } = this.formResume.controls;
-    return {
-      author: 'Jose Arnaldo',
-      content: this.articleCKEditor.articleData,
-      linkImg: url?.value,
-      resume: resume?.value,
-      dtPublication: new Date().toLocaleDateString(),
-      tag: tag.value,
-      title: title.value
-
-    }
-  }
-
   urlErrorMessage(): string {
     const { url } = this.formTitleUrl.controls;
     if(url.touched) {
@@ -149,14 +197,4 @@ export class ArticleNewComponent {
     return ''
   }
 
-  private createFormTitleURL(): FormGroup {
-    return this._formBuilder.group(
-      {
-        title: new FormControl('', [Validators.required,
-                                    Validators.minLength(5),
-                                    Validators.pattern(/[A-Za-z0-9]/)]),
-        url: new FormControl('', [Validators.required, imageUrlValidator()])
-      }
-    )
-  }
 }

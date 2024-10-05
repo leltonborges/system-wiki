@@ -15,7 +15,7 @@ import {
   ActivatedRoute,
   Router
 } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MessageRef } from '@c/core/common/message-ref';
 
 @Component({
              selector: 'cs-article',
@@ -31,20 +31,14 @@ export class ArticleComponent {
 
   constructor(private readonly _router: Router,
               private readonly _activatedRoute: ActivatedRoute,
-              private readonly _snackBar: MatSnackBar) {}
+              private readonly _messageRef: MessageRef) {}
 
   openArticle() {
     this._router
         .navigate(['..', 'show', this.article.id],
                   { relativeTo: this._activatedRoute })
         .catch(_ => {
-          this._snackBar.open('Failed to navigate to article',
-                              'Close',
-                              {
-                                duration: 5000,
-                                horizontalPosition: 'end',
-                                verticalPosition: 'top'
-                              });
+          this._messageRef.error('Failed to navigate to article');
         });
   }
 }

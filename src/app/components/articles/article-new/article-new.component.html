@@ -1,3 +1,4 @@
+<cs-loading/>
 <main>
   <h3 class="mt-15">Novo artigo</h3>
   <mat-stepper #stepper
@@ -14,6 +15,7 @@
                  matTooltipPosition="above"
                  matInput
                  formControlName="title"
+                 #title
                  placeholder="Título do artigo">
             <mat-error>{{ titleErrorMessage() }}</mat-error>
         </mat-form-field>
@@ -47,6 +49,7 @@
           <mat-select formControlName="tag">
             <mat-option value="one">First option</mat-option>
             <mat-option value="two">Second option</mat-option>
+            <mat-option value="#Python">#Python</mat-option>
           </mat-select>
             <mat-error>{{ tagErrorMessage() }}</mat-error>
         </mat-form-field>
@@ -76,6 +79,7 @@
     <mat-step class="form">
       <ng-template matStepLabel>Escreva o artigo</ng-template>
       <cs-article-ckeditor #articleCKEditor
+                           [content]="contentArticle"
                            class="mt-15"/>
       <div class="field-flex">
         <button mat-icon-button

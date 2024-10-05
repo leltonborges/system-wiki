@@ -64,14 +64,8 @@ export class ArticleShowComponent
         .subscribe({
                      next: result => {
                        if(result) {
-                         this._router.navigate(['/', 'article', 'new'],
-                                               {
-                                                 queryParams: { idArticle: this.article.id }
-                                               })
-                             .catch(err => {
-                               console.error(err)
-                               this._messageRef.error('Failed to navigate to article');
-                             });
+                         this._router.navigate(['/', 'article', 'edit', this.article.id])
+                             .catch(() => this._messageRef.error('Failed to navigate to article'));
                        }
                      }
                    })
