@@ -73,15 +73,14 @@ export class ArticleNewComponent {
                )
   }
 
-  private createFormTitleURL(): FormGroup {
-    return this._formBuilder.group(
-      {
-        title: new FormControl('', [Validators.required,
-                                    Validators.minLength(10),
-                                    Validators.pattern(/[A-Za-z0-9]/)]),
-        url: new FormControl('', [Validators.required, imageUrlValidator()])
-      }
-    )
+  titleErrorMessage(): string {
+    const { title } = this.formTitleUrl.controls;
+    if(title.touched) {
+      if(title.hasError('required')) return ('Titulo é obrigatório.')
+      else if(title.hasError('minlength')) return ('O minimo 5 carecteres')
+      else if(title.hasError('pattern')) return ('Titulo invalido')
+    }
+    return '';
   }
 
   private openDialog(content: DialogContent,
@@ -176,13 +175,14 @@ export class ArticleNewComponent {
     return ''
   }
 
-  titleErrorMessage(): string {
-    const { title } = this.formTitleUrl.controls;
-    if(title.touched) {
-      if(title.hasError('required')) return ('Titulo é obrigatório.')
-      else if(title.hasError('minlength')) return ('Tamanho minimo de 10 carecteres')
-      else if(title.hasError('pattern')) return ('Titulo invalido')
-    }
-    return '';
+  private createFormTitleURL(): FormGroup {
+    return this._formBuilder.group(
+      {
+        title: new FormControl('', [Validators.required,
+                                    Validators.minLength(5),
+                                    Validators.pattern(/[A-Za-z0-9]/)]),
+        url: new FormControl('', [Validators.required, imageUrlValidator()])
+      }
+    )
   }
 }

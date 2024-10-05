@@ -5,7 +5,7 @@
                [linear]="true">
     <mat-step [stepControl]="formTitleUrl">
       <form [formGroup]="formTitleUrl"
-            class="d-flex">
+            class="form">
         <ng-template matStepLabel>Titulo e URL da imagem para artigo</ng-template>
         <mat-form-field>
           <mat-label>Titulo</mat-label>
@@ -40,7 +40,7 @@
       </form>
     </mat-step>
     <mat-step [stepControl]="formResume">
-      <form [formGroup]="formResume" class="d-flex">
+      <form [formGroup]="formResume" class="form">
         <ng-template matStepLabel>Resumo e Categoria</ng-template>
         <mat-form-field>
           <mat-label>Tag</mat-label>
@@ -73,11 +73,11 @@
         </div>
       </form>
     </mat-step>
-    <mat-step class="d-flex">
+    <mat-step class="form">
       <ng-template matStepLabel>Escreva o artigo</ng-template>
       <cs-article-ckeditor #articleCKEditor
                            class="mt-15"/>
-      <div>
+      <div class="field-flex">
         <button mat-icon-button
                 color="primary"
                 matTooltip="Ir para o próximo"

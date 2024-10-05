@@ -14,6 +14,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { IconComponent } from '@c/core/icon/icon.component';
+import { TopicNavigationComponent } from '@c/navegation/topic-navegation/topic-navigation.component';
 
 @Component({
              selector: 'cs-main',
@@ -22,7 +23,7 @@ import { IconComponent } from '@c/core/icon/icon.component';
                        MatButtonModule,
                        MatToolbarModule,
                        MatIconModule,
-                       MatSidenavModule, RouterLink, IconComponent],
+                       MatSidenavModule, RouterLink, IconComponent, TopicNavigationComponent],
              templateUrl: './app.component.html',
              styleUrl: './app.component.sass'
            })

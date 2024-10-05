@@ -3,13 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PageArticles } from '@c/articles/model/page-articles';
 import { Article } from '@c/articles/model/article';
+import { environment } from '../../../../environment/environment';
 
 @Injectable({
               providedIn: 'root'
             })
 export class ArticleService {
 
-  private API: string = 'http://localhost:9090';
+  private API: string = environment.API_ARTICLE_URL;
 
   constructor(private httpClient: HttpClient) {}
 

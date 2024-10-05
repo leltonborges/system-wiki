@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "angular-vite-ckeditor": {
+    "sistem-wiki": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/angular-vite-ckeditor",
+            "outputPath": "dist/sistem-wiki",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -42,13 +42,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "2MB",
+                  "maximumError": "5MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kB",
-                  "maximumError": "4kB"
+                  "maximumWarning": "6kB",
+                  "maximumError": "260kB"
                 }
               ],
               "outputHashing": "all"
@@ -65,10 +65,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "angular-vite-ckeditor:build:production"
+              "buildTarget": "sistem-wiki:build:production"
             },
             "development": {
-              "buildTarget": "angular-vite-ckeditor:build:development"
+              "buildTarget": "sistem-wiki:build:development"
             }
           },
           "defaultConfiguration": "development"
