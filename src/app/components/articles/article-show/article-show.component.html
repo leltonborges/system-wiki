@@ -1,6 +1,34 @@
-<main>
-  <img src="{{article.linkImg}}" alt="{{article.title}}"/>
-  <section class="editor-container__editor">
+<main class="container-show">
+  <div *ngIf="article.linkImg" class="container-img">
+    <img alt="{{article.title}}"
+         class="img-main"
+         src="{{article.linkImg}}"/>
+  </div>
+  <section class="container-article">
     <div [innerHtml]="renderSafeHtml()"></div>
   </section>
+  <div class="container-footer-article">
+    <div class="info-author">
+      <span class="nome-author"><strong>Author: </strong>{{ article.author }}      </span>
+      <span class="date-publication"><strong>Publicado:</strong> {{ article.dtPublication }}</span>
+      <span class="info-tag">
+        <strong>Tag: </strong>{{ article.tag }}
+      </span>
+    </div>
+    <div class="article-actions">
+      <button (click)="edit()"
+              aria-label="Botão para editar este um artigo"
+              mat-icon-button
+              matTooltip="Botão para editar este um artigo"
+              matTooltipPosition="left">
+        <sc-icon icon="edit"/>
+      </button>
+      <button aria-label="Botão para inativar um artigo"
+              mat-icon-button
+              matTooltip="Botão para inativar um artigo"
+              matTooltipPosition="left">
+        <sc-icon icon="trash-alt"/>
+      </button>
+    </div>
+  </div>
 </main>

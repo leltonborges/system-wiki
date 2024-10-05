@@ -1,4 +1,4 @@
-<div class="main">
+<div class="main-app">
   <header>
     <mat-toolbar class="header">
       <button mat-icon-button
@@ -8,7 +8,7 @@
       </button>
       <a class="link-wiki"
          [routerLink]="['/']">
-        <h3>Sistem Wiki - UDF</h3>
+        <h3>System Wiki - UDF</h3>
       </a>
       <span class="spacer"></span>
       <button mat-icon-button
@@ -28,7 +28,6 @@
   </header>
   <mat-sidenav-container>
     <mat-sidenav #sidenav
-                 opened
                  [mode]="mobileQuery.matches ? 'over' : 'side'"
                  [fixedInViewport]="mobileQuery.matches"
                  fixedTopGap="56">

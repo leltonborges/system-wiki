@@ -4,17 +4,13 @@ import {
 } from '@angular/core';
 import { ArticleComponent } from '@c/articles/article/article.component';
 import { ArticleService } from '@c/articles/service/article.service';
-import {
-  Article,
-  Articles
-} from '@c/articles/model/article';
+import { Articles } from '@c/articles/model/article';
 import {
   BehaviorSubject,
   map
 } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { toMap } from 'ckeditor5';
 import { PageArticles } from '@c/articles/model/page-articles';
 
 @Component({
@@ -30,10 +26,10 @@ import { PageArticles } from '@c/articles/model/page-articles';
 export class ArticleListComponent
   implements OnInit {
 
-  constructor(private articleService: ArticleService,
-              private activatedRoute: ActivatedRoute) {}
+  private readonly _articles$: BehaviorSubject<Articles> = new BehaviorSubject<Articles>([]);
 
-  private _articles$: BehaviorSubject<Articles> = new BehaviorSubject<Articles>([]);
+  constructor(private readonly articleService: ArticleService,
+              private readonly activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
     this.activatedRoute

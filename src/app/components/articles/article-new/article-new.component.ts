@@ -22,15 +22,11 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { imageUrlValidator } from '@c/articles/validator/image-url.validator';
-import {
-  MatDialog,
-  MatDialogRef
-} from '@angular/material/dialog';
-import { ConfirmationDialogComponent } from '@c/core/confirmation-dialog/confirmation-dialog.component';
-import { DialogContent } from '../../../core/model/dialog-content';
+import { MatDialog } from '@angular/material/dialog';
 import { Article } from '@c/articles/model/article';
 import { ArticleService } from '@c/articles/service/article.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { DialogRef } from '@c/core/common/dialog-ref';
+import { MessageRef } from '@c/core/common/message-ref';
 
 @Component({
              selector: 'cs-article-new',
@@ -56,9 +52,10 @@ export class ArticleNewComponent {
   formTitleUrl!: FormGroup;
   formResume!: FormGroup;
 
-  constructor(private _formBuilder: FormBuilder,
-              private _articleService: ArticleService,
-              private _snackBar: MatSnackBar) {
+  constructor(private readonly _formBuilder: FormBuilder,
+              private readonly _articleService: ArticleService,
+              private readonly _messageRef: MessageRef,
+              private readonly _dialogRef: DialogRef) {
     this.formTitleUrl = this.createFormTitleURL();
     this.formResume = this.createdFormResume()
   }
@@ -83,21 +80,11 @@ export class ArticleNewComponent {
     return '';
   }
 
-  private openDialog(content: DialogContent,
-                     enterDuration?: number,
-                     exitDuration?: number): MatDialogRef<ConfirmationDialogComponent> {
-    return this.dialog
-               .open(ConfirmationDialogComponent,
-                     {
-                       data: content,
-                       enterAnimationDuration: enterDuration,
-                       exitAnimationDuration: exitDuration
-                     })
-  }
-
   reset() {
-    this.openModal('Resfazer tudo',
-                   'Tem certezar que deseja desfazer tudo e fazer novamente?')
+    this._dialogRef.openDialog({
+                                 title: 'Resfazer tudo',
+                                 message: 'Tem certezar que deseja desfazer tudo e fazer novamente?'
+                               })
         .afterClosed()
         .subscribe(result => {
                      if(result) this.stepper.reset();
@@ -106,8 +93,10 @@ export class ArticleNewComponent {
   }
 
   save() {
-    this.openModal('Salvar Artigo',
-                   'Tem certezar que deseja salvar este artigo?')
+    this._dialogRef.openDialog({
+                                 title: 'Salvar Artigo',
+                                 message: 'Tem certezar que deseja salvar este artigo?'
+                               })
         .afterClosed()
         .subscribe((result: boolean) => this.processToSave(result))
   }
@@ -118,31 +107,16 @@ export class ArticleNewComponent {
       this._articleService.save(article)
           .subscribe({
                        next: (result) => {
-                         if(result) this.showMessage('Artigo salvo com sucesso!!!');
-                         else this.showMessage('Falha ao salvar o artigo!!');
+                         if(result) this._messageRef.success('Artigo salvo com sucesso!!!');
+                         else this._messageRef.error('Falha ao salvar o artigo!!');
                        },
                        error: (error) => {
-                         this.showMessage('Algo deu errado ao salvar o artigo.');
+                         this._messageRef.error('Algo deu errado ao salvar o artigo.');
                          console.error('Erro:', error);
                        }
                      });
 
     }
-  }
-
-  private showMessage(msg: string) {
-    this._snackBar.open(msg,
-                        'Close',
-                        {
-                          duration: 5000,
-                          horizontalPosition: 'end',
-                          verticalPosition: 'top'
-                        });
-  }
-
-  private openModal(title: string,
-                    message: string): MatDialogRef<ConfirmationDialogComponent> {
-    return this.openDialog({ message, title }, 200, 200);
   }
 
   private mountNewArticle(): Article {

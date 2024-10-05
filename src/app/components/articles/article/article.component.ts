@@ -29,14 +29,14 @@ export class ArticleComponent {
   @Input({ alias: 'article', required: true })
   article!: Article;
 
-  constructor(private router: Router,
-              private activatedRoute: ActivatedRoute,
-              private _snackBar: MatSnackBar) {}
+  constructor(private readonly _router: Router,
+              private readonly _activatedRoute: ActivatedRoute,
+              private readonly _snackBar: MatSnackBar) {}
 
   openArticle() {
-    this.router
+    this._router
         .navigate(['..', 'show', this.article.id],
-                  { relativeTo: this.activatedRoute })
+                  { relativeTo: this._activatedRoute })
         .catch(_ => {
           this._snackBar.open('Failed to navigate to article',
                               'Close',
