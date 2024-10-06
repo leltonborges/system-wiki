@@ -1,6 +1,9 @@
 import {
+  AfterViewInit,
+  ChangeDetectorRef,
   Component,
-  OnInit
+  OnInit,
+  ViewEncapsulation
 } from '@angular/core';
 import {
   ActivatedRoute,
@@ -8,16 +11,20 @@ import {
 } from '@angular/router';
 import { Article } from '@c/articles/model/article';
 import { map } from 'rxjs';
-import {
-  DomSanitizer,
-  SafeHtml
-} from '@angular/platform-browser';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgIf } from '@angular/common';
 import { IconComponent } from '@c/core/icon/icon.component';
 import { MatIconButton } from '@angular/material/button';
 import { DialogRef } from '@c/core/common/dialog-ref';
 import { MessageRef } from '@c/core/common/message-ref';
+import {
+  ClassicEditor,
+  type EditorConfig
+} from 'ckeditor5';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { plugins } from '@c/articles/constants/plugins';
+import { LoadingComponent } from '@c/core/loading/loading.component';
+import { LoadingService } from '@c/core/loading/loading.service';
 
 @Component({
              selector: 'cs-article-show',
@@ -26,32 +33,48 @@ import { MessageRef } from '@c/core/common/message-ref';
                NgIf,
                IconComponent,
                MatTooltipModule,
-               MatIconButton
+               MatIconButton,
+               CKEditorModule,
+               LoadingComponent
              ],
              templateUrl: './article-show.component.html',
-             styleUrl: './article-show.component.sass'
+             styleUrl: './article-show.component.sass',
+             encapsulation: ViewEncapsulation.None
            })
 export class ArticleShowComponent
-  implements OnInit {
+  implements OnInit,
+             AfterViewInit {
   article!: Article;
+  public isLayoutReady = false;
+  public Editor = ClassicEditor;
+  public config: EditorConfig = {};
 
-  constructor(private readonly _sanitizer: DomSanitizer,
-              private readonly _activatedRoute: ActivatedRoute,
+  constructor(private readonly _activatedRoute: ActivatedRoute,
               private readonly _router: Router,
               private readonly _dialogRef: DialogRef,
-              private readonly _messageRef: MessageRef) {}
+              private readonly _messageRef: MessageRef,
+              private readonly changeDetector: ChangeDetectorRef,
+              private readonly _loadingService: LoadingService) {}
+
+  get content(): string {
+    return this.article?.content ?? '';
+  }
+
+  public ngAfterViewInit(): void {
+    this.config = { plugins };
+    this.isLayoutReady = true;
+    this.changeDetector.detectChanges();
+    this._loadingService.hide();
+  }
 
   ngOnInit() {
+    this._loadingService.show();
     this._activatedRoute
         .data
         .pipe(map(data => data['article']))
         .subscribe((data: Article) => {
           this.article = data;
         });
-  }
-
-  renderSafeHtml(): SafeHtml {
-    return this._sanitizer.bypassSecurityTrustHtml(this.article.content);
   }
 
   edit() {

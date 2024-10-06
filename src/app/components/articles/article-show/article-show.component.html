@@ -1,3 +1,4 @@
+<cs-loading/>
 <main class="container-show">
   <div *ngIf="article.linkImg" class="container-img">
     <img alt="{{article.title}}"
@@ -6,7 +7,12 @@
   </div>
   <section class="container-article">
     <h1 class="article-title">{{ article.title }}</h1>
-    <div [innerHtml]="renderSafeHtml()"></div>
+    <ckeditor *ngIf="isLayoutReady"
+              [config]="config"
+              [data]="content"
+              [disabled]="true"
+              [editor]="Editor"></ckeditor>
+
   </section>
   <div class="container-footer-article">
     <div class="info-author">

@@ -22,8 +22,8 @@ export class ArticleService {
     return this.httpClient.get<Article>(`${ this.API }/articles/${ id }`);
   }
 
-  save(article: Article): Observable<boolean> {
-    if(article.id) return this.httpClient.put<boolean>(`${ this.API }/articles/${ article.id }`, article);
-    else return this.httpClient.post<boolean>(`${ this.API }/articles`, article);
+  save(article: Article): Observable<Article> {
+    if(article.id) return this.httpClient.put<Article>(`${ this.API }/articles/${ article.id }`, article);
+    else return this.httpClient.post<Article>(`${ this.API }/articles`, article);
   }
 }

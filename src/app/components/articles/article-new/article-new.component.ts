@@ -43,7 +43,8 @@ import { LoadingService } from '@c/core/loading/loading.service';
                        MatStepperModule,
                        MatButtonModule,
                        MatIconModule,
-                       ArticleCKEditorComponent, LoadingComponent],
+                       ArticleCKEditorComponent,
+                       LoadingComponent],
              templateUrl: './article-new.component.html',
              styleUrl: './article-new.component.sass'
            })
@@ -67,7 +68,7 @@ export class ArticleNewComponent
   }
 
   get contentArticle(): string {
-    return this.editArticle.content
+    return this.editArticle?.content ?? '';
   }
 
   ngAfterViewInit(): void {
@@ -95,7 +96,6 @@ export class ArticleNewComponent
   }
 
   private createdFormResume(): FormGroup {
-    console.log('2: ', this.editArticle);
     return this._formBuilder
                .group(
                  {
@@ -121,9 +121,12 @@ export class ArticleNewComponent
       const article = this.mountNewArticle();
       this._articleService.save(article)
           .subscribe({
-                       next: this.showMessageAfterSave,
+                       next: result => {
+                         this.showMessageAfterSave(!!result)
+                         console.log(result)
+                       },
                        error: (error) => {
-                         this._messageRef.error('Algo deu errado ao salvar o artigo.');
+                         this.showMessageError()
                          console.error('Erro:', error);
                        }
                      });
@@ -131,9 +134,17 @@ export class ArticleNewComponent
     }
   }
 
-  private showMessageAfterSave(result: boolean): void {
-    result ? this._messageRef.success('Artigo salvo com sucesso!!!')
-           : this._messageRef.error('Falha ao salvar o artigo!!');
+  private showMessageAfterSave(success: boolean): void {
+    success ? this.showMessageSuccess()
+            : this.showMessageError();
+  }
+
+  private showMessageSuccess() {
+    this._messageRef.success('Artigo salvo com sucesso!!!');
+  }
+
+  private showMessageError() {
+    this._messageRef.error('Falha ao salvar o artigo!!');
   }
 
   private mountNewArticle(): Article {
