@@ -27,7 +27,10 @@ import { Article } from '@c/articles/model/article';
 import { ArticleService } from '@c/articles/service/article.service';
 import { DialogRef } from '@c/core/common/dialog-ref';
 import { MessageRef } from '@c/core/common/message-ref';
-import { ActivatedRoute } from '@angular/router';
+import {
+  ActivatedRoute,
+  Router
+} from '@angular/router';
 import { map } from 'rxjs';
 import { LoadingComponent } from '@c/core/loading/loading.component';
 import { LoadingService } from '@c/core/loading/loading.service';
@@ -63,6 +66,7 @@ export class ArticleNewComponent
               private readonly _articleService: ArticleService,
               private readonly _loadingService: LoadingService,
               private readonly _router: ActivatedRoute,
+              private readonly _route: Router,
               private readonly _messageRef: MessageRef,
               private readonly _dialogRef: DialogRef) {
   }
@@ -122,11 +126,17 @@ export class ArticleNewComponent
       this._articleService.save(article)
           .subscribe({
                        next: result => {
-                         this.showMessageAfterSave(!!result)
-                         console.log(result)
+                         this._route.navigate(['/', 'article', 'show', result.id],
+                                              {
+                                                state: {
+                                                  isSuccess: !!result,
+                                                  isUpdate: this._router.snapshot.url.find(url => url.path == 'edit') !== undefined
+                                                }
+                                              })
+                             .catch(() => this._messageRef.error('Falha ao salvar o artigo!!'));
                        },
                        error: (error) => {
-                         this.showMessageError()
+                         this._messageRef.error('Falha ao salvar o artigo!!')
                          console.error('Erro:', error);
                        }
                      });
@@ -134,18 +144,6 @@ export class ArticleNewComponent
     }
   }
 
-  private showMessageAfterSave(success: boolean): void {
-    success ? this.showMessageSuccess()
-            : this.showMessageError();
-  }
-
-  private showMessageSuccess() {
-    this._messageRef.success('Artigo salvo com sucesso!!!');
-  }
-
-  private showMessageError() {
-    this._messageRef.error('Falha ao salvar o artigo!!');
-  }
 
   private mountNewArticle(): Article {
     const { title, url } = this.formTitleUrl.controls;

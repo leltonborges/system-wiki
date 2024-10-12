@@ -65,6 +65,20 @@ export class ArticleShowComponent
     this.isLayoutReady = true;
     this.changeDetector.detectChanges();
     this._loadingService.hide();
+    this.displayMessageAfterSave();
+  }
+
+  private displayMessageAfterSave() {
+    if(history.state == null) return;
+    const isSuccess: boolean = history.state['isSuccess'];
+    const isUpdate: boolean = history.state['isUpdate'];
+    if(!isSuccess && !isUpdate) return;
+
+    if(isUpdate && isSuccess) this._messageRef.success('Artigo atualizado com sucesso', 10000);
+    else if(!isUpdate && isSuccess) this._messageRef.success('Novo artigo criado com sucesso', 10000);
+    else this._messageRef.error('Erro ao salvar', 10000);
+
+    history.replaceState({}, '');
   }
 
   ngOnInit() {

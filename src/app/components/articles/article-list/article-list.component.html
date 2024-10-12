@@ -1,5 +1,33 @@
-<section>
-  @for (item of (articles$ | async); track item.id) {
-    <cs-article [article]="item"></cs-article>
-  }
-</section>
+<mat-sidenav-container>
+  <mat-sidenav #sidenav class="sidenav" mode="over">
+    <p>
+      <button (click)="sidenav.toggle()">Toggle</button>
+    </p>
+  </mat-sidenav>
+  <mat-sidenav-content class="article-content">
+    <aside class="sidenav sidenav-header">
+      <mat-form-field class="field-size field-style">
+        <mat-label>Titulo</mat-label>
+        <input class="field-border" matInput>
+      </mat-form-field>
+      <mat-form-field class="field-size field-style">
+        <mat-label>Nome do author</mat-label>
+        <input matInput>
+      </mat-form-field>
+      <mat-form-field class="field-size field-style">
+        <mat-label>#Tag</mat-label>
+        <mat-select>
+          <mat-option value="one">First option</mat-option>
+          <mat-option value="two">Second option</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button (click)="sidenav.toggle()">Apply</button>
+    </aside>
+
+    <section>
+      @for (item of (articles$ | async); track item.id) {
+        <cs-article [article]="item"></cs-article>
+      }
+    </section>
+  </mat-sidenav-content>
+</mat-sidenav-container>

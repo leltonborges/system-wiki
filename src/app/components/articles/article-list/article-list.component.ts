@@ -12,13 +12,21 @@ import {
 import { AsyncPipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { PageArticles } from '@c/articles/model/page-articles';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
              selector: 'cs-articles-list',
              standalone: true,
              imports: [
                ArticleComponent,
-               AsyncPipe
+               AsyncPipe,
+               MatSidenavModule,
+               MatSelectModule,
+               MatInputModule,
+               MatFormFieldModule
              ],
              templateUrl: './article-list.component.html',
              styleUrl: './article-list.component.sass'
