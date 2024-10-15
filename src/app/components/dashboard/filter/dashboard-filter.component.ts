@@ -20,6 +20,10 @@ import _moment, { default as _rollupMoment } from 'moment';
 import { MatSelectModule } from '@angular/material/select';
 import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
 import { MatDateFormats } from '@angular/material/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MessageRef } from '@c/core/common/message-ref';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 const moment = _rollupMoment || _moment;
 
@@ -44,7 +48,10 @@ export const FORMAT_YEAR: MatDateFormats = {
                MatDatepickerModule,
                MatSelectModule,
                FormsModule,
-               ReactiveFormsModule
+               ReactiveFormsModule,
+               MatButtonModule,
+               MatIconModule,
+               MatTooltipModule
              ],
              templateUrl: './dashboard-filter.component.html',
              styleUrl: './dashboard-filter.component.sass',
@@ -57,27 +64,40 @@ export const FORMAT_YEAR: MatDateFormats = {
 export class DashboardFilterComponent {
   readonly minDate = new Date(2020, 1, 1);
   readonly maxDate = new Date();
+  readonly formFilter = this.createdFormGroup();
 
-  readonly dateStart = new FormControl()
-  readonly dateEnd = new FormControl()
-  readonly dateRangeForm = new FormGroup({
-                                           start: new FormControl(),
-                                           end: new FormControl()
-                                         });
+  constructor(private readonly _messageRef: MessageRef) {}
 
-  setYearMonthStart(normalizedYear: Moment,
+  setYearMonthStart(yearMonthSelect: Moment,
                     datepicker: MatDatepicker<Moment>) {
-    const ctrlValue = this.dateStart.value ?? moment();
-    ctrlValue.year(normalizedYear.year());
-    this.dateStart.setValue(ctrlValue);
+    const { endDate } = this.formFilter.controls;
+
+    if(!!endDate.value && yearMonthSelect.isAfter(endDate.value))
+      this._messageRef.error('A data selecionar é superior a data de termino')
+    else
+      this.formFilter.patchValue({ startDate: yearMonthSelect });
     datepicker.close();
   }
 
-  setYearMonthEnd(normalizedYear: Moment,
+  setYearMonthEnd(yearMonthSelect: Moment,
                   datepicker: MatDatepicker<Moment>) {
-    const ctrlValue = this.dateEnd.value ?? moment();
-    ctrlValue.year(normalizedYear.year());
-    this.dateEnd.setValue(ctrlValue);
+    const { startDate } = this.formFilter.controls;
+
+    if(!!startDate.value && yearMonthSelect.isBefore(startDate.value))
+      this._messageRef.error('A data selecionar é inferior a data de inicio')
+    else
+      this.formFilter.patchValue({ endDate: yearMonthSelect });
+
     datepicker.close();
+  }
+
+  private createdFormGroup(): FormGroup {
+    return new FormGroup({
+                           title: new FormControl(null),
+                           author: new FormControl(null),
+                           tag: new FormControl(null),
+                           startDate: new FormControl(null),
+                           endDate: new FormControl(null)
+                         });
   }
 }

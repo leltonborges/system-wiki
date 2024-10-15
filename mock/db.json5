@@ -161,5 +161,12 @@
       nama: 'DevOps',
       id: '76f5'
     }
+  ],
+  tags: [
+    '#Python',
+    '#Java',
+    '#Angular',
+    '#LogicaDeProgramação',
+    '#EstruturaDeDados'
   ]
 }
