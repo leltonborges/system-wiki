@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
 import { ArticleCKEditorComponent } from '@c/articles/article-ckeditor/article-ckeditor.component';
-import { ArticleListComponent } from '@c/articles/article-list/article-list.component';
 import { articlesPageResolver } from '@c/articles/resolver/articles.page.resolver';
 import { ArticleShowComponent } from '@c/articles/article-show/article-show.component';
 import { articleIdResolver } from '@c/articles/resolver/article.id.resolver';
 import { ArticleNewComponent } from '@c/articles/article-new/article-new.component';
 import { ArticleEditorComponent } from '@c/articles/article-editor/article-editor.component';
+import { DashboardContentComponent } from '@c/dashboard/content/dashboard-content.component';
 
 export const routes: Routes = [
   {
@@ -27,7 +27,7 @@ export const routes: Routes = [
   },
   {
     path: 'article/list',
-    component: ArticleListComponent,
+    component: DashboardContentComponent,
     resolve: {
       articles: articlesPageResolver
     }
