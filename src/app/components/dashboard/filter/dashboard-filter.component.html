@@ -20,10 +20,19 @@
                     matTooltip="Tag aplicada ao artigo"
                     matTooltipPosition="right">
       <mat-label>#Tag</mat-label>
-      <mat-select formControlName="tag">
-        <mat-option value="one">First option</mat-option>
-        <mat-option value="two">Second option</mat-option>
-      </mat-select>
+      <input #inputTag
+             (focus)="filterTag()"
+             (input)="filterTag()"
+             [matAutocomplete]="auto"
+             formControlName="tag"
+             matInput
+             placeholder="Tag"
+             type="text"/>
+      <mat-autocomplete #auto="matAutocomplete" requireSelection>
+        @for (tag of tagsOptions; track tag) {
+          <mat-option [value]="tag">{{ tag }}</mat-option>
+        }
+      </mat-autocomplete>
     </mat-form-field>
     <mat-form-field class="field-group"
                     matTooltip="Data minima de publicação do artigo para a filtragem"
@@ -63,6 +72,7 @@
   <div>
     <button mat-mini-fab
             matTooltip="Pesquisar conforme os filtros aplicados"
+            (click)="searchByFilter()"
             matTooltipPosition="above">
       <mat-icon>search</mat-icon>
     </button>

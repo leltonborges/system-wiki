@@ -1,6 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
+  ViewChild,
   ViewEncapsulation
 } from '@angular/core';
 import {
@@ -16,7 +18,6 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Moment } from 'moment/moment';
-import _moment, { default as _rollupMoment } from 'moment';
 import { MatSelectModule } from '@angular/material/select';
 import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
 import { MatDateFormats } from '@angular/material/core';
@@ -24,8 +25,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MessageRef } from '@c/core/common/message-ref';
 import { MatTooltipModule } from '@angular/material/tooltip';
-
-const moment = _rollupMoment || _moment;
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { BehaviorSubject } from 'rxjs';
+import {
+  ActivatedRoute,
+  Router
+} from '@angular/router';
 
 export const FORMAT_YEAR: MatDateFormats = {
   parse: {
@@ -51,7 +56,8 @@ export const FORMAT_YEAR: MatDateFormats = {
                ReactiveFormsModule,
                MatButtonModule,
                MatIconModule,
-               MatTooltipModule
+               MatTooltipModule,
+               MatAutocompleteModule
              ],
              templateUrl: './dashboard-filter.component.html',
              styleUrl: './dashboard-filter.component.sass',
@@ -65,8 +71,29 @@ export class DashboardFilterComponent {
   readonly minDate = new Date(2020, 1, 1);
   readonly maxDate = new Date();
   readonly formFilter = this.createdFormGroup();
+  tagsOptions: string[] = []
+  @ViewChild('inputTag')
+  inputTag!: ElementRef<HTMLInputElement>;
+  private readonly _tags$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 
-  constructor(private readonly _messageRef: MessageRef) {}
+  constructor(private readonly _messageRef: MessageRef,
+              private readonly _route: Router,
+              private readonly _router: ActivatedRoute
+  ) {
+    const
+      options: string[] = ['One', 'Two', 'Three', 'Four', 'Five'];
+    this
+      ._tags$
+      .next(options);
+
+    this
+      .tagsOptions = this._tags$.value.slice();
+  }
+
+  filterTag(): void {
+    const filterValue = this.inputTag.nativeElement.value.toLowerCase();
+    this.tagsOptions = this._tags$.value.filter(o => o.toLowerCase().includes(filterValue));
+  }
 
   setYearMonthStart(yearMonthSelect: Moment,
                     datepicker: MatDatepicker<Moment>) {
@@ -99,5 +126,19 @@ export class DashboardFilterComponent {
                            startDate: new FormControl(null),
                            endDate: new FormControl(null)
                          });
+  }
+
+  searchByFilter() {
+    const { title, author, tag, startDate, endDate } = this.formFilter.controls;
+    this._route.navigate([], {
+      queryParams: {
+        title: title.value,
+        author: author.value,
+        tag: tag.value,
+        startDate: startDate.value?.format('YYYYMM'),
+        endDate: endDate.value?.format('YYYYMM')
+      }
+    })
+        .catch(() => this._messageRef.error('Error na navegação'))
   }
 }
