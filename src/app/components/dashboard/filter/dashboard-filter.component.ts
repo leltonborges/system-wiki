@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  OnInit,
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
@@ -67,7 +68,8 @@ export const FORMAT_YEAR: MatDateFormats = {
                provideMomentDateAdapter(FORMAT_YEAR)
              ]
            })
-export class DashboardFilterComponent {
+export class DashboardFilterComponent
+  implements OnInit {
   readonly minDate = new Date(2020, 1, 1);
   readonly maxDate = new Date();
   readonly formFilter = this.createdFormGroup();
@@ -80,14 +82,14 @@ export class DashboardFilterComponent {
               private readonly _route: Router,
               private readonly _router: ActivatedRoute
   ) {
-    const
-      options: string[] = ['One', 'Two', 'Three', 'Four', 'Five'];
-    this
-      ._tags$
-      .next(options);
+    this.tagsOptions = this._tags$.value.slice();
+  }
 
-    this
-      .tagsOptions = this._tags$.value.slice();
+  ngOnInit(): void {
+    const tags = this._router.snapshot.data['tags'];
+    if(tags && tags.length > 0) {
+      this._tags$.next(tags);
+    }
   }
 
   filterTag(): void {

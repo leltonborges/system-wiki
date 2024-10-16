@@ -4,7 +4,7 @@ import {
   RouterStateSnapshot
 } from '@angular/router';
 import { inject } from '@angular/core';
-import { ArticleService } from '@c/articles/service/article.service';
+import { ArticleService } from '../../../common/service/article.service';
 import {
   Observable,
   of

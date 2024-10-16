@@ -6,6 +6,7 @@ import { articleIdResolver } from '@c/articles/resolver/article.id.resolver';
 import { ArticleNewComponent } from '@c/articles/article-new/article-new.component';
 import { ArticleEditorComponent } from '@c/articles/article-editor/article-editor.component';
 import { DashboardContentComponent } from '@c/dashboard/content/dashboard-content.component';
+import { tagsResolver } from '@c/dashboard/resolver/tags.resolver';
 
 export const routes: Routes = [
   {
@@ -29,7 +30,8 @@ export const routes: Routes = [
     path: 'article/list',
     component: DashboardContentComponent,
     resolve: {
-      articles: articlesPageResolver
+      articles: articlesPageResolver,
+      tags: tagsResolver
     }
   },
   {

@@ -3,7 +3,7 @@ import {
   OnInit
 } from '@angular/core';
 import { ArticleComponent } from '@c/articles/article/article.component';
-import { ArticleService } from '@c/articles/service/article.service';
+import { ArticleService } from '../../../common/service/article.service';
 import { Articles } from '@c/articles/model/article';
 import {
   BehaviorSubject,

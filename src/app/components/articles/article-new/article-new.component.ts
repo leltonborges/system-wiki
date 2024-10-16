@@ -24,7 +24,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { imageUrlValidator } from '@c/articles/validator/image-url.validator';
 import { Article } from '@c/articles/model/article';
-import { ArticleService } from '@c/articles/service/article.service';
+import { ArticleService } from '../../../common/service/article.service';
 import { DialogRef } from '@c/core/common/dialog-ref';
 import { MessageRef } from '@c/core/common/message-ref';
 import {
@@ -137,7 +137,6 @@ export class ArticleNewComponent
                        },
                        error: (error) => {
                          this._messageRef.error('Falha ao salvar o artigo!!')
-                         console.error('Erro:', error);
                        }
                      });
 

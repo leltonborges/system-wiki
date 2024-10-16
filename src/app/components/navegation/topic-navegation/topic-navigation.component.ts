@@ -2,11 +2,8 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-import { TopicService } from '@c/navegation/service/topic.service';
-import {
-  BehaviorSubject,
-  tap
-} from 'rxjs';
+import { TopicService } from '../../../common/service/topic.service';
+import { BehaviorSubject } from 'rxjs';
 import { TopicsNode } from '@c/navegation/modal/topic-node';
 
 @Component({
@@ -25,7 +22,7 @@ export class TopicNavigationComponent
   ngOnInit(): void {
     this._topicService
         .getAllTopics()
-        .pipe(tap(console.log))
+      // .pipe(tap(console.log))
         .subscribe(result => this.topics$.next(result));
   }
 
