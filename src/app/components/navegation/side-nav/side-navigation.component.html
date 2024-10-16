@@ -1,0 +1,80 @@
+<aside class="sidenav sidenav-header">
+  <form [formGroup]="formFilter">
+    <mat-form-field class="field-group"
+                    matTooltip="Parte do titulo conforme publicado"
+                    matTooltipPosition="right">
+      <mat-label>Titulo</mat-label>
+      <input formControlName="title"
+             matInput
+             placeholder="Titulo">
+    </mat-form-field>
+    <mat-form-field class="field-group"
+                    matTooltip="Nome do Autor que realizou a publicação"
+                    matTooltipPosition="right">
+      <mat-label>Autor</mat-label>
+      <input formControlName="author"
+             matInput
+             placeholder="Nome o Autor">
+    </mat-form-field>
+    <mat-form-field class="field-group"
+                    matTooltip="Tag aplicada ao artigo"
+                    matTooltipPosition="right">
+      <mat-label>#Tag</mat-label>
+      <input #inputTag
+             (focus)="filterTag()"
+             (input)="filterTag()"
+             [matAutocomplete]="auto"
+             formControlName="tag"
+             matInput
+             placeholder="Tag"
+             type="text"/>
+      <mat-autocomplete #auto="matAutocomplete" requireSelection>
+        @for (tag of tagsOptions; track tag) {
+          <mat-option [value]="tag">{{ tag }}</mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field class="field-group"
+                    matTooltip="Data minima de publicação do artigo para a filtragem"
+                    matTooltipPosition="right">
+      <mat-label>A partir</mat-label>
+      <input [matDatepicker]="dpStart"
+             [max]="maxDate"
+             [min]="minDate"
+             formControlName="startDate"
+             matInput
+             readonly>
+      <mat-datepicker-toggle [for]="dpStart" matIconSuffix></mat-datepicker-toggle>
+      <mat-datepicker #dpStart
+                      (monthSelected)="setYearMonthStart($event, dpStart)"
+                      panelClass="example-month-picker"
+                      startView="multi-year">
+      </mat-datepicker>
+    </mat-form-field>
+    <mat-form-field class="field-group"
+                    matTooltip="Data máxima de publicação do artigo para a filtragem"
+                    matTooltipPosition="right">
+      <mat-label>Até</mat-label>
+      <input [matDatepicker]="dpEnd"
+             [max]="maxDate"
+             [min]="minDate"
+             formControlName="endDate"
+             matInput
+             readonly>
+      <mat-datepicker-toggle [for]="dpEnd" matIconSuffix></mat-datepicker-toggle>
+      <mat-datepicker #dpEnd
+                      (monthSelected)="setYearMonthEnd($event, dpEnd)"
+                      panelClass="example-month-picker"
+                      startView="multi-year">
+      </mat-datepicker>
+    </mat-form-field>
+  </form>
+  <div>
+    <button (click)="searchByFilter()"
+            mat-mini-fab
+            matTooltip="Pesquisar conforme os filtros aplicados"
+            matTooltipPosition="above">
+      <mat-icon>search</mat-icon>
+    </button>
+  </div>
+</aside>

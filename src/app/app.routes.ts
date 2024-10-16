@@ -5,8 +5,7 @@ import { ArticleShowComponent } from '@c/articles/article-show/article-show.comp
 import { articleIdResolver } from '@c/articles/resolver/article.id.resolver';
 import { ArticleNewComponent } from '@c/articles/article-new/article-new.component';
 import { ArticleEditorComponent } from '@c/articles/article-editor/article-editor.component';
-import { DashboardContentComponent } from '@c/dashboard/content/dashboard-content.component';
-import { tagsResolver } from '@c/dashboard/resolver/tags.resolver';
+import { ArticleListComponent } from '@c/articles/article-list/article-list.component';
 
 export const routes: Routes = [
   {
@@ -28,10 +27,9 @@ export const routes: Routes = [
   },
   {
     path: 'article/list',
-    component: DashboardContentComponent,
+    component: ArticleListComponent,
     resolve: {
-      articles: articlesPageResolver,
-      tags: tagsResolver
+      articles: articlesPageResolver
     }
   },
   {

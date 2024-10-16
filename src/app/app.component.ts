@@ -13,7 +13,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { IconComponent } from '@c/core/icon/icon.component';
-import { TopicNavigationComponent } from '@c/navegation/topic-navegation/topic-navigation.component';
+import { SideNavigationComponent } from '@c/navegation/side-nav/side-navigation.component';
 
 @Component({
              selector: 'cs-main',
@@ -22,7 +22,7 @@ import { TopicNavigationComponent } from '@c/navegation/topic-navegation/topic-n
                        MatButtonModule,
                        MatToolbarModule,
                        MatIconModule,
-                       MatSidenavModule, RouterLink, IconComponent, TopicNavigationComponent],
+                       MatSidenavModule, RouterLink, IconComponent, SideNavigationComponent],
              templateUrl: './app.component.html',
              styleUrl: './app.component.sass'
            })

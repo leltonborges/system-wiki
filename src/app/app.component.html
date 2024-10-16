@@ -28,10 +28,11 @@
   </header>
   <mat-sidenav-container>
     <mat-sidenav #sidenav
+                 opened
                  [mode]="mobileQuery.matches ? 'over' : 'over'"
                  [fixedInViewport]="mobileQuery.matches"
                  fixedTopGap="56">
-      <cs-topic-navigation/>
+      <cs-side-navigation/>
     </mat-sidenav>
     <mat-sidenav-content>
       <main class="main-sidenav-content">
