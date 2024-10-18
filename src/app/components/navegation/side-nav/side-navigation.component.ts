@@ -4,7 +4,6 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import {
   FormControl,
   FormGroup,
@@ -28,6 +27,8 @@ import {
   Router
 } from '@angular/router';
 import { Moment } from 'moment';
+import { TagService } from '../../../common/service/tag.service';
+import { Tags } from '@c/navegation/model/tag';
 
 @Component({
              selector: 'cs-side-navigation',
@@ -52,29 +53,27 @@ export class SideNavigationComponent
   readonly minDate = new Date(2020, 1, 1);
   readonly maxDate = new Date();
   readonly formFilter = this.createdFormGroup();
-  tagsOptions: string[] = []
+  tagsOptions: Tags = []
   @ViewChild('inputTag')
   inputTag!: ElementRef<HTMLInputElement>;
-  private readonly _tags$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+  private _tags!: Tags;
 
   constructor(private readonly _messageRef: MessageRef,
               private readonly _route: Router,
-              private readonly _router: ActivatedRoute
+              private readonly _tagService: TagService
   ) {
-    this.tagsOptions = this._tags$.value.slice();
   }
 
   ngOnInit(): void {
-    console.table(this._router.snapshot.data);
-    const tags = this._router.snapshot.data['tags'];
-    if(tags && tags.length > 0) {
-      this._tags$.next(tags);
-    }
+    this._tagService
+        .findAllTags()
+        .subscribe((result: Tags) => this._tags = result)
+    this.tagsOptions = this._tags
   }
 
   filterTag(): void {
     const filterValue = this.inputTag.nativeElement.value.toLowerCase();
-    this.tagsOptions = this._tags$.value.filter(o => o.toLowerCase().includes(filterValue));
+    this.tagsOptions = this._tags.filter(o => o.name.toLowerCase().includes(filterValue));
   }
 
   setYearMonthStart(yearMonthSelect: Moment,

@@ -29,8 +29,8 @@
              placeholder="Tag"
              type="text"/>
       <mat-autocomplete #auto="matAutocomplete" requireSelection>
-        @for (tag of tagsOptions; track tag) {
-          <mat-option [value]="tag">{{ tag }}</mat-option>
+        @for (tag of tagsOptions; track tag.id) {
+          <mat-option [value]="tag.id">{{ tag.name }}</mat-option>
         }
       </mat-autocomplete>
     </mat-form-field>
