@@ -22,13 +22,23 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
 import { MessageRef } from '@c/core/common/message-ref';
-import {
-  ActivatedRoute,
-  Router
-} from '@angular/router';
+import { Router } from '@angular/router';
 import { Moment } from 'moment';
 import { TagService } from '../../../common/service/tag.service';
 import { Tags } from '@c/navegation/model/tag';
+import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
+
+const FORMAT_DATE = {
+  parse: {
+    dateInput: 'MM/YYYY'
+  },
+  display: {
+    dateInput: 'MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY'
+  }
+};
 
 @Component({
              selector: 'cs-side-navigation',
@@ -46,7 +56,10 @@ import { Tags } from '@c/navegation/model/tag';
                MatAutocompleteModule
              ],
              templateUrl: './side-navigation.component.html',
-             styleUrl: './side-navigation.component.sass'
+             styleUrl: './side-navigation.component.sass',
+             providers: [
+               provideMomentDateAdapter(FORMAT_DATE)
+             ]
            })
 export class SideNavigationComponent
   implements OnInit {

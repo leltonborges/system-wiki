@@ -22,7 +22,10 @@ import { SideNavigationComponent } from '@c/navegation/side-nav/side-navigation.
                        MatButtonModule,
                        MatToolbarModule,
                        MatIconModule,
-                       MatSidenavModule, RouterLink, IconComponent, SideNavigationComponent],
+                       MatSidenavModule,
+                       RouterLink,
+                       IconComponent,
+                       SideNavigationComponent],
              templateUrl: './app.component.html',
              styleUrl: './app.component.sass'
            })

@@ -69,12 +69,20 @@
       </mat-datepicker>
     </mat-form-field>
   </form>
-  <div>
+  <div class="actions-btn">
     <button (click)="searchByFilter()"
+            class="btn"
             mat-mini-fab
             matTooltip="Pesquisar conforme os filtros aplicados"
             matTooltipPosition="above">
       <mat-icon>search</mat-icon>
+    </button>
+    <button (click)="searchByFilter()"
+            class="btn"
+            mat-mini-fab
+            matTooltip="Redefinir para o filtro padrão"
+            matTooltipPosition="above">
+      <mat-icon>restart_alt</mat-icon>
     </button>
   </div>
 </aside>
