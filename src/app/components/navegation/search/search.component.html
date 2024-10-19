@@ -1,15 +1,19 @@
 <div *ngIf="!isModal"
      [class.margin-desktop]="!isModal"
      class="input-search-desktop">
-  <input (keyup)="debounce$.next(inputSearch.value)"
-         [formControl]="inputSearch"
-         type="text"/>
+  <ng-container *ngTemplateOutlet="input"></ng-container>
   <mat-icon>search</mat-icon>
 </div>
 
 <div *ngIf="isModal" class="input-search-desktop">
+  <ng-container *ngTemplateOutlet="input"></ng-container>
+</div>
+
+
+<ng-template #input>
   <input (keyup)="debounce$.next(inputSearch.value)"
+         matTooltip="Escreva uma informação que deseja encontrar"
+         placeholder="Busque aqui"
          [formControl]="inputSearch"
          type="text"/>
-  <mat-icon>search</mat-icon>
-</div>
+</ng-template>

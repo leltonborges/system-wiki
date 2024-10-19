@@ -12,6 +12,10 @@ import {
 import { AsyncPipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { PageArticles } from '@c/articles/model/page-articles';
+import {
+  MatPaginatorModule,
+  PageEvent
+} from '@angular/material/paginator';
 
 
 @Component({
@@ -19,6 +23,7 @@ import { PageArticles } from '@c/articles/model/page-articles';
              standalone: true,
              imports: [
                ArticleComponent,
+               MatPaginatorModule,
                AsyncPipe
              ],
              templateUrl: './article-list.component.html',
@@ -28,6 +33,11 @@ import { PageArticles } from '@c/articles/model/page-articles';
 export class ArticleListComponent
   implements OnInit {
   private readonly _articles$: BehaviorSubject<Articles> = new BehaviorSubject<Articles>([]);
+  length = 50;
+  pageSize = 10;
+  pageIndex = 0;
+  pageSizeOptions = [5, 10, 25];
+
 
   constructor(private readonly articleService: ArticleService,
               private readonly activatedRoute: ActivatedRoute) {}
@@ -45,5 +55,11 @@ export class ArticleListComponent
 
   get articles$(): BehaviorSubject<Articles> {
     return this._articles$;
+  }
+
+  handlePageEvent(e: PageEvent) {
+    this.length = e.length;
+    this.pageSize = e.pageSize;
+    this.pageIndex = e.pageIndex;
   }
 }

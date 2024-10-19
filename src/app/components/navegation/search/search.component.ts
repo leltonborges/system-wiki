@@ -14,15 +14,21 @@ import {
   Subject
 } from 'rxjs';
 import { Router } from '@angular/router';
-import { NgIf } from '@angular/common';
+import {
+  NgIf,
+  NgTemplateOutlet
+} from '@angular/common';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
              selector: 'cs-search',
              standalone: true,
              imports: [
                ReactiveFormsModule,
+               MatTooltipModule,
                MatIcon,
-               NgIf
+               NgIf,
+               NgTemplateOutlet
              ],
              templateUrl: './search.component.html',
              styleUrl: './search.component.sass'

@@ -3,3 +3,12 @@
     <cs-article [article]="item"></cs-article>
   }
 </section>
+<mat-paginator (page)="handlePageEvent($event)"
+               [length]="length"
+               [pageIndex]="pageIndex"
+               [pageSizeOptions]="pageSizeOptions"
+               [pageSize]="pageSize"
+               [showFirstLastButtons]="true"
+               [style.background-color]="'unset'"
+               aria-label="Select page">
+</mat-paginator>
