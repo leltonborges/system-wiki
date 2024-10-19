@@ -21,6 +21,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgIf } from '@angular/common';
 import { SearchComponent } from '@c/navegation/search/search.component';
 import { MatDialog } from '@angular/material/dialog';
+import { SearchModalComponent } from '@c/navegation/search-modal/search-modal.component';
 
 @Component({
              selector: 'cs-main',
@@ -69,10 +70,6 @@ export class AppComponent
   }
 
   openModalSearch() {
-    this._dialog.open(SearchComponent, {
-      data: true,
-      width: '360px',
-      height: 'auto'
-    });
+    this._dialog.open(SearchModalComponent);
   }
 }

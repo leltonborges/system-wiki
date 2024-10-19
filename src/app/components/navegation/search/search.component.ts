@@ -1,6 +1,5 @@
 import {
   Component,
-  inject,
   Input,
   OnInit
 } from '@angular/core';
@@ -15,10 +14,6 @@ import {
   Subject
 } from 'rxjs';
 import { Router } from '@angular/router';
-import {
-  MatDialogModule,
-  MatDialogRef
-} from '@angular/material/dialog';
 import { NgIf } from '@angular/common';
 
 @Component({
@@ -26,7 +21,6 @@ import { NgIf } from '@angular/common';
              standalone: true,
              imports: [
                ReactiveFormsModule,
-               MatDialogModule,
                MatIcon,
                NgIf
              ],
@@ -35,10 +29,9 @@ import { NgIf } from '@angular/common';
            })
 export class SearchComponent
   implements OnInit {
-  readonly dialogRef = inject(MatDialogRef<SearchComponent>)
   readonly inputSearch = new FormControl();
   @Input({ alias: 'modal' })
-  isModal!: boolean;
+  isModal: boolean = false;
   private readonly _debounce$: Subject<string> = new Subject<string>();
 
   constructor(private readonly _route: Router) {}
@@ -48,12 +41,10 @@ export class SearchComponent
   }
 
   ngOnInit(): void {
-    this.isModal = window.innerWidth <= 550;
     this.debounce$.pipe(filter(res => !!res && res.length > 5),
                         debounceTime(3000))
         .subscribe(result => {
           this.searchArticles(result).catch(console.error)
-          this.isModal && this.dialogRef.close(true)
         });
   }
 
