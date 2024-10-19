@@ -12,11 +12,19 @@ import {
   withFetch
 } from '@angular/common/http';
 import { MatNativeDateModule } from '@angular/material/core';
+import {
+  providerDatePT,
+  providerLocalePT,
+  providerPaginatorPT
+} from './material-locale-pt';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }),
               provideRouter(routes),
               provideAnimationsAsync(),
               provideHttpClient(withFetch()),
-              importProvidersFrom(MatNativeDateModule)]
+              importProvidersFrom(MatNativeDateModule),
+              providerPaginatorPT,
+              providerLocalePT,
+              providerDatePT]
 };

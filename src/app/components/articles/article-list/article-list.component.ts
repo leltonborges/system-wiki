@@ -36,7 +36,7 @@ export class ArticleListComponent
   length = 50;
   pageSize = 10;
   pageIndex = 0;
-  pageSizeOptions = [5, 10, 25];
+  readonly pageSizeOptions = [10, 25, 50];
 
 
   constructor(private readonly articleService: ArticleService,
