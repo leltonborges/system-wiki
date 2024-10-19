@@ -1,35 +1,52 @@
 <div class="main-app">
   <header>
     <mat-toolbar class="header">
-      <button mat-icon-button
-              (click)="sidenav.toggle()"
-              aria-label="Ocutar ou mostrar menu lateral">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <a class="link-wiki"
-         [routerLink]="['/']">
-        <h3>System Wiki - UDF</h3>
-      </a>
-      <span class="spacer"></span>
-      <button mat-icon-button
-              [routerLink]="['article', 'new']"
-              aria-label="Criar um novo artigo">
-        <mat-icon>editor</mat-icon>
-      </button>
-      <a mat-icon-button
-         class="link-github"
-         aria-label="Github do projeto"
-         href="https://github.com/leltonborges"
-         target="_blank">
-        <sc-icon [icon]="['fab', 'github']"
-                 animation="fade"/>
-      </a>
+      <div class="header-home">
+        <button aria-label="Ocutar ou mostrar menu lateral"
+                mat-icon-button
+                routerLink="/">
+          <mat-icon>home</mat-icon>
+        </button>
+        <a [routerLink]="['/']"
+           class="link-wiki">
+          <h3>System Wiki - UDF</h3>
+        </a>
+      </div>
+      <cs-search #search *ngIf="!isMobile" [modal]="isMobile"></cs-search>
+      <div class="header-end">
+        <button (click)="openModalSearch()"
+                *ngIf="isMobile"
+                mat-icon-button>
+          <mat-icon class="icon-search">search</mat-icon>
+        </button>
+        <button (click)="sidenav.toggle()"
+                aria-label="botão para filtrar artigos"
+                mat-icon-button
+                matTooltip="Filtrar artigos">
+          <mat-icon>filter_alt</mat-icon>
+        </button>
+        <button (click)="sidenav.opened && sidenav.toggle()"
+                [routerLink]="['article', 'new']"
+                aria-label="Criar um novo artigo"
+                mat-icon-button>
+          <mat-icon>editor</mat-icon>
+        </button>
+        <a aria-label="Github do projeto"
+           class="link-github"
+           href="https://github.com/leltonborges"
+           mat-icon-button
+           target="_blank">
+          <sc-icon [icon]="['fab', 'github']"
+                   animation="fade"/>
+        </a>
+      </div>
     </mat-toolbar>
   </header>
   <mat-sidenav-container>
     <mat-sidenav #sidenav
-                 [mode]="mobileQuery.matches ? 'over' : 'over'"
-                 [fixedInViewport]="mobileQuery.matches"
+                 [fixedInViewport]="desktopQuery.matches"
+                 [mode]="desktopQuery.matches ? 'over' : 'over'"
+                 position="end"
                  fixedTopGap="56">
       <cs-side-navigation/>
     </mat-sidenav>

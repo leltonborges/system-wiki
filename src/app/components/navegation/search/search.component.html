@@ -1,0 +1,17 @@
+<div *ngIf="!isModal"
+     [class.margin-desktop]="!isModal"
+     class="input-search-desktop">
+  <input (keyup)="debounce$.next(inputSearch.value)"
+         [formControl]="inputSearch"
+         type="text"/>
+  <mat-icon>search</mat-icon>
+</div>
+
+<mat-dialog-content *ngIf="isModal">
+  <div class="input-search-desktop">
+    <input (keyup)="debounce$.next(inputSearch.value)"
+           [formControl]="inputSearch"
+           type="text"/>
+    <mat-icon>search</mat-icon>
+  </div>
+</mat-dialog-content>

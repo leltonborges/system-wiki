@@ -1,9 +1,11 @@
 import {
   ChangeDetectorRef,
   Component,
+  HostListener,
   OnDestroy
 } from '@angular/core';
 import {
+  Event,
   RouterLink,
   RouterOutlet
 } from '@angular/router';
@@ -14,6 +16,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { IconComponent } from '@c/core/icon/icon.component';
 import { SideNavigationComponent } from '@c/navegation/side-nav/side-navigation.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
+import { NgIf } from '@angular/common';
+import { SearchComponent } from '@c/navegation/search/search.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
              selector: 'cs-main',
@@ -25,27 +32,47 @@ import { SideNavigationComponent } from '@c/navegation/side-nav/side-navigation.
                        MatSidenavModule,
                        RouterLink,
                        IconComponent,
-                       SideNavigationComponent],
+                       SideNavigationComponent,
+                       MatTooltipModule,
+                       NgIf,
+                       SearchComponent],
              templateUrl: './app.component.html',
              styleUrl: './app.component.sass'
            })
 export class AppComponent
   implements OnDestroy {
-  mobileQuery!: MediaQueryList;
+  desktopQuery!: MediaQueryList;
+  private readonly _queryListenerDesktop!: () => void;
 
-  constructor(private readonly _media: MediaMatcher,
-              private readonly _detectorRef: ChangeDetectorRef) {
-
-    // this.mobileQuery = _media.matchMedia('(max-width: 600px)');
-    this.mobileQuery = _media.matchMedia('(max-width: 1130px)');
-    this._mobileQueryListener = () => _detectorRef.detectChanges();
-    this.mobileQuery.addEventListener('change', this._mobileQueryListener);
+  constructor(readonly _media: MediaMatcher,
+              readonly _detectorRef: ChangeDetectorRef,
+              private readonly _dialog: MatDialog) {
+    this.desktopQuery = _media.matchMedia('(max-width: 1130px)');
+    this._queryListenerDesktop = () => _detectorRef.detectChanges();
+    this.desktopQuery.addEventListener('change', this._queryListenerDesktop)
+    this.screenSize();
   }
 
-  private readonly _mobileQueryListener!: () => void;
+  private _isMobile = false;
+
+  get isMobile(): boolean {
+    return this._isMobile;
+  }
 
   ngOnDestroy(): void {
-    this.mobileQuery.removeEventListener('change', this._mobileQueryListener);
+    this.desktopQuery.removeEventListener('change', this._queryListenerDesktop);
   }
 
+  @HostListener('window:resize', ['$event'])
+  screenSize(event?: Event) {
+    this._isMobile = window.innerWidth <= 550
+  }
+
+  openModalSearch() {
+    this._dialog.open(SearchComponent, {
+      data: true,
+      width: '360px',
+      height: 'auto'
+    });
+  }
 }

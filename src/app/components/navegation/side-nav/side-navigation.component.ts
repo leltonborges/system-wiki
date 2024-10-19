@@ -114,7 +114,7 @@ export class SideNavigationComponent
 
   searchByFilter() {
     const { title, author, tag, startDate, endDate } = this.formFilter.controls;
-    this._route.navigate([], {
+    this._route.navigate(['/article', 'list'], {
       queryParams: {
         title: title.value,
         author: author.value,
