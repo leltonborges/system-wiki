@@ -1,5 +1,4 @@
 import {
-  ActivatedRoute,
   ActivatedRouteSnapshot,
   CanActivateFn,
   Router,
@@ -8,35 +7,26 @@ import {
 import { inject } from '@angular/core';
 import {
   Filter,
-  filterDefault
+  filterValid,
+  invalidFilter
 } from '../../../common/interface/Filter';
+import { FilterService } from '../../../common/service/filter.service';
 
 export const routerParamsGuard: CanActivateFn = (route: ActivatedRouteSnapshot,
                                                  state: RouterStateSnapshot) => {
   const router = inject(Router);
-  const activatedRoute = inject(ActivatedRoute);
+  const filterService = inject(FilterService);
 
-  const { title, author, tag, startDate, endDate, page, pageSize } = route.queryParams;
-
-  const missingParams = !endDate || !page || page < 1 || !pageSize || pageSize < 10;
-
-  if(missingParams) {
-    const filter: Filter = {
-      ...filterDefault,
-      title,
-      tag,
-      author,
-      startDate
-    };
-
-    router.navigate([], {
-      relativeTo: activatedRoute,
-      queryParams: filter,
-      queryParamsHandling: 'merge'
+  const filterParams: Filter = route.queryParams as Filter;
+  if(invalidFilter(filterParams)) {
+    router.navigate(['/article', 'list'], {
+      queryParams: filterService.push(filterValid(filterParams))
     }).catch(console.error);
 
     return false;
   }
+
+  filterService.push(filterParams)
 
   return true;
 };

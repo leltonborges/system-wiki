@@ -1,6 +1,7 @@
 import {
   Component,
   ElementRef,
+  OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
@@ -22,18 +23,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
 import { MessageRef } from '@c/core/common/message-ref';
-import {
-  ActivatedRoute,
-  Router
-} from '@angular/router';
+import { Router } from '@angular/router';
 import { Moment } from 'moment';
 import { TagService } from '../../../common/service/tag.service';
 import { Tags } from '@c/navegation/model/tag';
 import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
-import {
-  Filter,
-  filterValid
-} from '../../../common/interface/Filter';
+import { Filter } from '../../../common/interface/Filter';
+import { FilterService } from '../../../common/service/filter.service';
+import { Subscription } from 'rxjs';
 
 const FORMAT_DATE = {
   parse: {
@@ -69,7 +66,8 @@ const FORMAT_DATE = {
              ]
            })
 export class SideNavigationComponent
-  implements OnInit {
+  implements OnInit,
+             OnDestroy {
   readonly minDate = new Date(2020, 1, 1);
   readonly maxDate = new Date();
   readonly formFilter = this.createdFormGroup();
@@ -77,23 +75,26 @@ export class SideNavigationComponent
   @ViewChild('inputTag')
   inputTag!: ElementRef<HTMLInputElement>;
   private _tags!: Tags;
-
+  private filterSubscription!: Subscription;
 
   constructor(private readonly _messageRef: MessageRef,
               private readonly _route: Router,
-              private readonly _router: ActivatedRoute,
-              private readonly _tagService: TagService
-  ) {
+              private readonly _tagService: TagService,
+              private readonly _filterService: FilterService
+  ) {}
+
+  ngOnDestroy(): void {
+    this.filterSubscription.unsubscribe();
   }
 
   ngOnInit(): void {
     this._tagService
         .findAllTags()
         .subscribe((result: Tags) => this._tags = result)
+    this.filterSubscription = this._filterService
+                                  .getFilterObservable()
+                                  .subscribe((filter: Filter) => this.formFilter.patchValue({ ...filter }));
     this.tagsOptions = this._tags
-    const { title, author, tag, startDate, endDate } = this._router.snapshot.queryParams;
-    //fixme pegar os parametros da rota....
-    this.formFilter.patchValue({ title, author, tag, startDate, endDate });
   }
 
   filterTag(): void {
@@ -137,10 +138,10 @@ export class SideNavigationComponent
       title: title.value,
       author: author.value,
       tag: selectedTag?.id,
-      startDate: startDate.value?.format('YYYYMM'),
-      endDate: endDate.value?.format('YYYYMM')
+      startDate: startDate?.value,
+      endDate: endDate?.value
     }
-    this._route.navigate(['article', 'list'], { queryParams: filterValid(filter) })
+    this._route.navigate(['article', 'list'], { queryParams: this._filterService.push(filter) })
         .catch(() => this._messageRef.error('Error na navegação'))
   }
 

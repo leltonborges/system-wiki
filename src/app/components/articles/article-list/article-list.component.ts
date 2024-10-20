@@ -45,11 +45,11 @@ export class ArticleListComponent
   readonly pageSizeOptions = [10, 25, 50];
 
 
-  constructor(private readonly articleService: ArticleService,
-              private readonly activatedRoute: ActivatedRoute) {}
+  constructor(private readonly _articleService: ArticleService,
+              private readonly _activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
-    this.activatedRoute
+    this._activatedRoute
         .data
         .pipe(map(data => data['articles']))
         .subscribe({
