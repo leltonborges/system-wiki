@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { PageArticles } from '@c/articles/model/page-articles';
 import { Article } from '@c/articles/model/article';
 import { environment } from '../../../environments/environment';
+import { Filter } from '../interface/Filter';
 
 @Injectable({
               providedIn: 'root'
@@ -14,8 +15,8 @@ export class ArticleService {
 
   constructor(private readonly httpClient: HttpClient) {}
 
-  findAllPage(page: number): Observable<PageArticles> {
-    return this.httpClient.get<PageArticles>(`${ this.API }/articles?_page=${ page }&_per_page=25`);
+  findAllPage(filter: Filter): Observable<PageArticles> {
+    return this.httpClient.get<PageArticles>(`${ this.API }/articles?_page=${ filter.page }&_per_page=25`);
   }
 
   findByID(id: string): Observable<Article> {

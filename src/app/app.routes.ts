@@ -6,12 +6,14 @@ import { articleIdResolver } from '@c/articles/resolver/article.id.resolver';
 import { ArticleNewComponent } from '@c/articles/article-new/article-new.component';
 import { ArticleEditorComponent } from '@c/articles/article-editor/article-editor.component';
 import { ArticleListComponent } from '@c/articles/article-list/article-list.component';
+import { InitComponent } from './init.component';
+import { routerParamsGuard } from '@c/articles/guard/router-params.guard';
 
 export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'article/list'
+    component: InitComponent
   },
   {
     path: 'article/new',
@@ -28,6 +30,7 @@ export const routes: Routes = [
   {
     path: 'article/list',
     component: ArticleListComponent,
+    canActivate: [routerParamsGuard],
     resolve: {
       articles: articlesPageResolver
     }
@@ -45,5 +48,9 @@ export const routes: Routes = [
     resolve: {
       article: articleIdResolver
     }
+  },
+  {
+    path: '**',
+    component: InitComponent
   }
 ];

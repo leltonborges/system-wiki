@@ -14,7 +14,9 @@
          *ngIf="article.linkImg"
          class="card-img"
          mat-card-image
-         [src]="article.linkImg">
+         [ngSrc]="article.linkImg"
+         height="100"
+         width="225">
     <p class="ellipsis">
       {{ article.resume ?? article.title }}
     </p>

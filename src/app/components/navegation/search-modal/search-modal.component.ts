@@ -21,7 +21,11 @@ import {
 export class SearchModalComponent {
   readonly dialogRef = inject(MatDialogRef<SearchModalComponent>);
 
-  close(): void {
+  close(): () => void {
+    return () => this.closeModal();
+  }
+
+  closeModal(): void {
     this.dialogRef.close(true);
   }
 }

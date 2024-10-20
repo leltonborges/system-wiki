@@ -39,6 +39,7 @@ export class SearchComponent
   @Input({ alias: 'modal' })
   isModal: boolean = false;
   private readonly _debounce$: Subject<string> = new Subject<string>();
+  @Input() listener!: () => void;
 
   constructor(private readonly _route: Router) {}
 
@@ -50,7 +51,7 @@ export class SearchComponent
     this.debounce$.pipe(filter(res => !!res && res.length > 5),
                         debounceTime(3000))
         .subscribe(result => {
-          this.searchArticles(result).catch(console.error)
+          this.searchArticles(result).then(this.listener).catch(console.error)
         });
   }
 
