@@ -6,26 +6,27 @@ import {
   RouterStateSnapshot
 } from '@angular/router';
 import { inject } from '@angular/core';
-import { Filter } from '../../../common/interface/Filter';
-import moment from 'moment';
+import {
+  Filter,
+  filterDefault
+} from '../../../common/interface/Filter';
 
 export const routerParamsGuard: CanActivateFn = (route: ActivatedRouteSnapshot,
                                                  state: RouterStateSnapshot) => {
   const router = inject(Router);
   const activatedRoute = inject(ActivatedRoute);
 
-  const { title, author, startDate, endDate, page, pageSize } = route.queryParams;
+  const { title, author, tag, startDate, endDate, page, pageSize } = route.queryParams;
 
   const missingParams = !endDate || !page || page < 1 || !pageSize || pageSize < 10;
 
   if(missingParams) {
     const filter: Filter = {
-      title: title,
-      author: author,
-      startDate: startDate,
-      endDate: endDate ?? moment().format('YYYYMM'),
-      page: page && page > 0 ? page : 1,
-      pageSize: pageSize && pageSize > 10 ? pageSize : 10
+      ...filterDefault,
+      title,
+      tag,
+      author,
+      startDate
     };
 
     router.navigate([], {

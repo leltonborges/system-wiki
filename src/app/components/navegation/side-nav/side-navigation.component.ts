@@ -22,11 +22,18 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
 import { MessageRef } from '@c/core/common/message-ref';
-import { Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  Router
+} from '@angular/router';
 import { Moment } from 'moment';
 import { TagService } from '../../../common/service/tag.service';
 import { Tags } from '@c/navegation/model/tag';
 import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
+import {
+  Filter,
+  filterValid
+} from '../../../common/interface/Filter';
 
 const FORMAT_DATE = {
   parse: {
@@ -71,8 +78,10 @@ export class SideNavigationComponent
   inputTag!: ElementRef<HTMLInputElement>;
   private _tags!: Tags;
 
+
   constructor(private readonly _messageRef: MessageRef,
               private readonly _route: Router,
+              private readonly _router: ActivatedRoute,
               private readonly _tagService: TagService
   ) {
   }
@@ -82,6 +91,9 @@ export class SideNavigationComponent
         .findAllTags()
         .subscribe((result: Tags) => this._tags = result)
     this.tagsOptions = this._tags
+    const { title, author, tag, startDate, endDate } = this._router.snapshot.queryParams;
+    //fixme pegar os parametros da rota....
+    this.formFilter.patchValue({ title, author, tag, startDate, endDate });
   }
 
   filterTag(): void {
@@ -113,16 +125,22 @@ export class SideNavigationComponent
   }
 
   searchByFilter() {
+    if(this.isFormEmpty()) {
+      this._messageRef.error('É necessário um fitro preenchido')
+      return;
+    }
+
     const { title, author, tag, startDate, endDate } = this.formFilter.controls;
-    this._route.navigate(['/article', 'list'], {
-      queryParams: {
-        title: title.value,
-        author: author.value,
-        tag: tag.value,
-        startDate: startDate.value?.format('YYYYMM'),
-        endDate: endDate.value?.format('YYYYMM')
-      }
-    })
+    const selectedTag = this._tags.find(t => t.name.toUpperCase()
+                                              .includes(tag.value?.toUpperCase()));
+    const filter: Filter = {
+      title: title.value,
+      author: author.value,
+      tag: selectedTag?.id,
+      startDate: startDate.value?.format('YYYYMM'),
+      endDate: endDate.value?.format('YYYYMM')
+    }
+    this._route.navigate(['article', 'list'], { queryParams: filterValid(filter) })
         .catch(() => this._messageRef.error('Error na navegação'))
   }
 
@@ -134,5 +152,18 @@ export class SideNavigationComponent
                            startDate: new FormControl(null),
                            endDate: new FormControl(null)
                          });
+  }
+
+  resetFilter() {
+    this.formFilter.reset();
+  }
+
+  private isFormEmpty(): boolean {
+    const formControls = this.formFilter.controls;
+    return Object.values(formControls)
+                 .every(control => {
+                   const value = control.value;
+                   return value === null || value === '';
+                 });
   }
 }

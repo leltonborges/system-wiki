@@ -11,10 +11,11 @@ import { Filter } from '../../../common/interface/Filter';
 
 export const articlesPageResolver: ResolveFn<PageArticles> = (route: ActivatedRouteSnapshot,
                                                               state: RouterStateSnapshot): Observable<PageArticles> => {
-  const { title, author, startDate, endDate, page, pageSize } = route.queryParams;
+  const { title, author, tag, startDate, endDate, page, pageSize } = route.queryParams;
   const filter: Filter = {
     title,
     author,
+    tag,
     startDate,
     endDate,
     page,

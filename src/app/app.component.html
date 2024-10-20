@@ -4,16 +4,21 @@
       <div class="header-home">
         <button aria-label="Home"
                 matTooltip="Pagina inicial"
+                (click)="sidenav.opened && sidenav.toggle()"
                 mat-icon-button
                 routerLink="/">
           <mat-icon>home</mat-icon>
         </button>
         <a [routerLink]="['/']"
+           (click)="sidenav.opened && sidenav.toggle()"
            class="link-wiki">
           <h3>System Wiki - UDF</h3>
         </a>
       </div>
-      <cs-search #search *ngIf="!isMobile" [modal]="isMobile"></cs-search>
+      <cs-search (click)="sidenav.opened && sidenav.toggle()"
+                 (keydown)="handleKeyDown($event)"
+                 *ngIf="!isMobile"
+                 [modal]="isMobile"></cs-search>
       <div class="header-end">
         <button (click)="openModalSearch()"
                 *ngIf="isMobile"

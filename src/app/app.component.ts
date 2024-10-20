@@ -72,4 +72,8 @@ export class AppComponent
   openModalSearch() {
     this._dialog.open(SearchModalComponent);
   }
+
+  handleKeyDown($event: KeyboardEvent): void {
+    console.log('Desabilitado!!');
+  }
 }
