@@ -9,13 +9,17 @@ import {
   BehaviorSubject,
   map
 } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
+import {
+  AsyncPipe,
+  NgIf
+} from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { PageArticles } from '@c/articles/model/page-articles';
 import {
   MatPaginatorModule,
   PageEvent
 } from '@angular/material/paginator';
+import { IconSvgComponent } from '@c/core/icon-svg/icon-svg.component';
 
 
 @Component({
@@ -24,7 +28,9 @@ import {
              imports: [
                ArticleComponent,
                MatPaginatorModule,
-               AsyncPipe
+               AsyncPipe,
+               NgIf,
+               IconSvgComponent
              ],
              templateUrl: './article-list.component.html',
              styleUrl: './article-list.component.sass',

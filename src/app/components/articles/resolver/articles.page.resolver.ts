@@ -8,7 +8,6 @@ import { ArticleService } from '../../../common/service/article.service';
 import { Observable } from 'rxjs';
 import { PageArticles } from '../model/page-articles';
 import { Filter } from '../../../common/interface/Filter';
-import moment from 'moment/moment';
 
 export const articlesPageResolver: ResolveFn<PageArticles> = (route: ActivatedRouteSnapshot,
                                                               state: RouterStateSnapshot): Observable<PageArticles> => {
@@ -17,9 +16,9 @@ export const articlesPageResolver: ResolveFn<PageArticles> = (route: ActivatedRo
     title,
     author,
     startDate,
-    endDate: endDate ?? moment().format('YYYYMM'),
-    page: page ?? 0,
-    pageSize: pageSize ?? 10
+    endDate,
+    page,
+    pageSize
   }
   return inject(ArticleService).findAllPage(filter);
 };

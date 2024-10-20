@@ -1,14 +1,27 @@
-<section>
-  @for (item of (articles$ | async); track item.id) {
-    <cs-article [article]="item"></cs-article>
-  }
-</section>
-<mat-paginator (page)="handlePageEvent($event)"
-               [length]="length"
-               [pageIndex]="pageIndex"
-               [pageSizeOptions]="pageSizeOptions"
-               [pageSize]="pageSize"
-               [showFirstLastButtons]="true"
-               [style.background-color]="'unset'"
-               aria-label="Select page">
-</mat-paginator>
+<ng-container *ngIf="articles$ | async as articles; else notFound">
+  <section>
+    @for (item of (articles$ | async); track item.id) {
+      <cs-article [article]="item"></cs-article>
+    }
+  </section>
+  <mat-paginator (page)="handlePageEvent($event)"
+                 [length]="length"
+                 [pageIndex]="pageIndex"
+                 [pageSizeOptions]="pageSizeOptions"
+                 [pageSize]="pageSize"
+                 [showFirstLastButtons]="true"
+                 [style.background-color]="'unset'"
+                 aria-label="Select page">
+  </mat-paginator>
+</ng-container>
+
+
+<ng-template #notFound>
+  <div class="not-found">
+    <p>Nem uma informação foi encontrada!!!</p>
+    <cs-icon-svg height="497"
+                 svgName="no-data"
+                 width="667"/>
+  </div>
+
+</ng-template>

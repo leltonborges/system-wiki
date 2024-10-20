@@ -28,7 +28,7 @@ export class InitComponent
             author,
             startDate,
             endDate: endDate ?? moment().format('YYYYMM'),
-            page: page ?? 0,
+            page: page ?? 1,
             pageSize: pageSize ?? 10
         }
         this._router.navigate(['/article', 'list'], { queryParams: filter })

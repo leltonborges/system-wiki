@@ -16,7 +16,7 @@ export const routerParamsGuard: CanActivateFn = (route: ActivatedRouteSnapshot,
 
   const { title, author, startDate, endDate, page, pageSize } = route.queryParams;
 
-  const missingParams = !endDate || !page || !pageSize;
+  const missingParams = !endDate || !page || page < 1 || !pageSize || pageSize < 10;
 
   if(missingParams) {
     const filter: Filter = {
@@ -24,8 +24,8 @@ export const routerParamsGuard: CanActivateFn = (route: ActivatedRouteSnapshot,
       author: author,
       startDate: startDate,
       endDate: endDate ?? moment().format('YYYYMM'),
-      page: page ?? 0,
-      pageSize: pageSize ?? 10
+      page: page && page > 0 ? page : 1,
+      pageSize: pageSize && pageSize > 10 ? pageSize : 10
     };
 
     router.navigate([], {
