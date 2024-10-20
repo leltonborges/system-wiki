@@ -8,6 +8,7 @@ import { ArticleEditorComponent } from '@c/articles/article-editor/article-edito
 import { ArticleListComponent } from '@c/articles/article-list/article-list.component';
 import { InitComponent } from './init.component';
 import { routerParamsGuard } from '@c/articles/guard/router-params.guard';
+import { NoFoundComponent } from '@c/no-found/no-found.component';
 
 export const routes: Routes = [
   {
@@ -51,6 +52,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    component: InitComponent
+    component: NoFoundComponent
   }
 ];

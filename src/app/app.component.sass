@@ -21,7 +21,6 @@ $header-footer-height: 65px
   bottom: 0
   z-index: 100
 
-
 .main-app
   display: flex
   flex-direction: column
@@ -41,17 +40,15 @@ mat-sidenav-container
   background-color: #e9ecef
   overflow: hidden
 
-  mat-sidenav, .mat-drawer
-    border: none
-    border-radius: 0
-    max-width: 320px
 
-  mat-sidenav-content
-    flex: 1
-    display: flex
-    flex-wrap: wrap
-    justify-content: center
-    margin: 0 20px
+mat-sidenav, .mat-drawer
+  border: none
+  border-radius: 0
+  max-width: 320px
+
+mat-sidenav-content
+  width: 100%
+  min-height: calc(100vh - $header-footer-height - $header-footer-height)
 
 cs-search
   flex: 1
@@ -67,7 +64,6 @@ cs-search
 
 .link-github
   margin: 0 5px
-
 
 .icon-search
   font-weight: bold

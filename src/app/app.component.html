@@ -2,7 +2,8 @@
   <header>
     <mat-toolbar class="header">
       <div class="header-home">
-        <button aria-label="Ocutar ou mostrar menu lateral"
+        <button aria-label="Home"
+                matTooltip="Pagina inicial"
                 mat-icon-button
                 routerLink="/">
           <mat-icon>home</mat-icon>
@@ -27,13 +28,15 @@
         </button>
         <button (click)="sidenav.opened && sidenav.toggle()"
                 [routerLink]="['article', 'new']"
+                matTooltip="Criar um novo artigo"
                 aria-label="Criar um novo artigo"
                 mat-icon-button>
           <mat-icon>editor</mat-icon>
         </button>
         <a aria-label="Github do projeto"
            class="link-github"
-           href="https://github.com/leltonborges"
+           href="https://github.com/leltonborges/system-wiki"
+           matTooltip="Github do projeto"
            mat-icon-button
            target="_blank">
           <sc-icon [icon]="['fab', 'github']"
@@ -51,9 +54,7 @@
       <cs-side-navigation/>
     </mat-sidenav>
     <mat-sidenav-content>
-      <main class="main-sidenav-content">
         <router-outlet></router-outlet>
-      </main>
     </mat-sidenav-content>
   </mat-sidenav-container>
   <footer>
