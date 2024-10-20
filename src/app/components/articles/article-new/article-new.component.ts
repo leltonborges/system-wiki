@@ -2,7 +2,8 @@ import {
   AfterViewInit,
   Component,
   OnInit,
-  ViewChild
+  ViewChild,
+  ViewEncapsulation
 } from '@angular/core';
 import {
   FormBuilder,
@@ -49,7 +50,8 @@ import { LoadingService } from '@c/core/loading/loading.service';
                        ArticleCKEditorComponent,
                        LoadingComponent],
              templateUrl: './article-new.component.html',
-             styleUrl: './article-new.component.sass'
+             styleUrl: './article-new.component.sass',
+             encapsulation: ViewEncapsulation.None
            })
 export class ArticleNewComponent
   implements OnInit,
