@@ -1,6 +1,7 @@
 import {
   Component,
   ElementRef,
+  Input,
   OnDestroy,
   OnInit,
   ViewChild
@@ -34,6 +35,7 @@ import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
 import { Filter } from '../../../common/interface/Filter';
 import { FilterService } from '../../../common/service/filter.service';
 import { Subscription } from 'rxjs';
+import { MatSidenav } from '@angular/material/sidenav';
 
 const FORMAT_DATE = {
   parse: {
@@ -77,8 +79,11 @@ export class SideNavigationComponent
   tagsOptions: Tags = []
   @ViewChild('inputTag')
   inputTag!: ElementRef<HTMLInputElement>;
+  @Input({ alias: 'toggle' })
+  sidenav!: MatSidenav;
   private _tags!: Tags;
   private filterSubscription!: Subscription;
+
 
   constructor(private readonly _messageRef: MessageRef,
               private readonly _route: Router,
@@ -116,6 +121,7 @@ export class SideNavigationComponent
       endDate: endDate?.value
     }
     this._route.navigate(['article', 'list'], { queryParams: this._filterService.push(filter) })
+        .then(() => this.sidenav?.toggle())
         .catch(() => this._messageRef.error('Error na navegação'))
   }
 

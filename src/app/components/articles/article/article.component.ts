@@ -16,11 +16,12 @@ import {
   Router
 } from '@angular/router';
 import { MessageRef } from '@c/core/common/message-ref';
+import { IconSvgComponent } from '@c/core/icon-svg/icon-svg.component';
 
 @Component({
              selector: 'cs-article',
              standalone: true,
-             imports: [MatCardModule, MatButtonModule, NgOptimizedImage, MatIcon, NgIf],
+             imports: [MatCardModule, MatButtonModule, NgOptimizedImage, MatIcon, NgIf, IconSvgComponent],
              changeDetection: ChangeDetectionStrategy.OnPush,
              templateUrl: './article.component.html',
              styleUrl: './article.component.sass'

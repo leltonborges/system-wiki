@@ -56,7 +56,7 @@
                  [mode]="desktopQuery.matches ? 'over' : 'over'"
                  position="end"
                  fixedTopGap="56">
-      <cs-side-navigation/>
+      <cs-side-navigation [toggle]="sidenav"/>
     </mat-sidenav>
     <mat-sidenav-content>
         <router-outlet></router-outlet>
