@@ -26,7 +26,10 @@ import { MessageRef } from '@c/core/common/message-ref';
 import { Router } from '@angular/router';
 import { Moment } from 'moment';
 import { TagService } from '../../../common/service/tag.service';
-import { Tags } from '@c/navegation/model/tag';
+import {
+  Tag,
+  Tags
+} from '@c/navegation/model/tag';
 import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
 import { Filter } from '../../../common/interface/Filter';
 import { FilterService } from '../../../common/service/filter.service';
@@ -90,11 +93,30 @@ export class SideNavigationComponent
   ngOnInit(): void {
     this._tagService
         .findAllTags()
-        .subscribe((result: Tags) => this._tags = result)
-    this.filterSubscription = this._filterService
-                                  .getFilterObservable()
-                                  .subscribe((filter: Filter) => this.formFilter.patchValue({ ...filter }));
-    this.tagsOptions = this._tags
+        .subscribe((tags: Tags) => {
+          this._tags = tags;
+          this.tagsOptions = tags;
+          this.subscribeToFilterChanges();
+        });
+  }
+
+  searchByFilter() {
+    if(this.isFormEmpty()) {
+      this._messageRef.error('É necessário um fitro preenchido')
+      return;
+    }
+
+    const { title, author, tag, startDate, endDate } = this.formFilter.controls;
+    const selectedTag = this.getTag(tag.value?.toUpperCase());
+    const filter: Filter = {
+      title: title.value,
+      author: author.value,
+      tag: selectedTag?.id,
+      startDate: startDate?.value,
+      endDate: endDate?.value
+    }
+    this._route.navigate(['article', 'list'], { queryParams: this._filterService.push(filter) })
+        .catch(() => this._messageRef.error('Error na navegação'))
   }
 
   filterTag(): void {
@@ -125,24 +147,23 @@ export class SideNavigationComponent
     datepicker.close();
   }
 
-  searchByFilter() {
-    if(this.isFormEmpty()) {
-      this._messageRef.error('É necessário um fitro preenchido')
-      return;
-    }
+  private subscribeToFilterChanges() {
+    this.filterSubscription = this._filterService
+                                  .getFilterObservable()
+                                  .subscribe((filter: Filter) => {
+                                    let tag;
+                                    if(filter.tag) {
+                                      tag = this.getTag(filter.tag)?.name;
+                                    }
+                                    this.formFilter.patchValue({ ...filter, tag });
+                                  });
+  }
 
-    const { title, author, tag, startDate, endDate } = this.formFilter.controls;
-    const selectedTag = this._tags.find(t => t.name.toUpperCase()
-                                              .includes(tag.value?.toUpperCase()));
-    const filter: Filter = {
-      title: title.value,
-      author: author.value,
-      tag: selectedTag?.id,
-      startDate: startDate?.value,
-      endDate: endDate?.value
-    }
-    this._route.navigate(['article', 'list'], { queryParams: this._filterService.push(filter) })
-        .catch(() => this._messageRef.error('Error na navegação'))
+  private getTag(nameOrId: string): Tag | undefined {
+    return this._tags.find(t =>
+                             t.name.toUpperCase()
+                              .includes(nameOrId.toUpperCase())
+                             || t.id == nameOrId);
   }
 
   private createdFormGroup(): FormGroup {
