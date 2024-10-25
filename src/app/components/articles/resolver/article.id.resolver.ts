@@ -9,10 +9,10 @@ import {
   Observable,
   of
 } from 'rxjs';
-import { Article } from '@c/articles/model/article';
+import { ArticleDetail } from '@c/articles/model/article-detail';
 
-export const articleIdResolver: ResolveFn<Article> = (route: ActivatedRouteSnapshot,
-                                                      state: RouterStateSnapshot): Observable<Article> => {
+export const articleIdResolver: ResolveFn<ArticleDetail> = (route: ActivatedRouteSnapshot,
+                                                            state: RouterStateSnapshot): Observable<ArticleDetail> => {
   const param: string = route.params['articleId'];
   if(param) return inject(ArticleService).findByID(param);
   else return of();

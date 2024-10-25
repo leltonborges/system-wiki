@@ -1,8 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {
+  map,
+  Observable
+} from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Tags } from '@c/navegation/model/tag';
+import {
+  Tags,
+  TagsPage
+} from '@c/navegation/model/tag';
 
 @Injectable({
               providedIn: 'root'
@@ -13,7 +19,7 @@ export class TagService {
   constructor(private readonly _httpClient: HttpClient) { }
 
   findAllTags(): Observable<Tags> {
-    const url = `${ this.API }/tags`;
-    return this._httpClient.get<Tags>(url);
+    const url = `${ this.API }/tag/list/status/1?size=50`;
+    return this._httpClient.get<TagsPage>(url).pipe(map(result => result.data));
   }
 }

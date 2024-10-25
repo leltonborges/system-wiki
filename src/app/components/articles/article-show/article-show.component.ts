@@ -9,7 +9,7 @@ import {
   ActivatedRoute,
   Router
 } from '@angular/router';
-import { Article } from '@c/articles/model/article';
+import { ArticleDetail } from '@c/articles/model/article-detail';
 import { map } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgIf } from '@angular/common';
@@ -44,7 +44,7 @@ import { LoadingService } from '@c/core/loading/loading.service';
 export class ArticleShowComponent
   implements OnInit,
              AfterViewInit {
-  article!: Article;
+  article!: ArticleDetail;
   public isLayoutReady = false;
   public Editor = ClassicEditor;
   public config: EditorConfig = {};
@@ -86,7 +86,7 @@ export class ArticleShowComponent
     this._activatedRoute
         .data
         .pipe(map(data => data['article']))
-        .subscribe((data: Article) => {
+        .subscribe((data: ArticleDetail) => {
           this.article = data;
         });
   }

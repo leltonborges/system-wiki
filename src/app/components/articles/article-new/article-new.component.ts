@@ -24,7 +24,7 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { imageUrlValidator } from '@c/articles/validator/image-url.validator';
-import { Article } from '@c/articles/model/article';
+import { ArticleDetail } from '@c/articles/model/article-detail';
 import { ArticleService } from '../../../common/service/article.service';
 import { DialogRef } from '@c/core/common/dialog-ref';
 import { MessageRef } from '@c/core/common/message-ref';
@@ -35,6 +35,7 @@ import {
 import { map } from 'rxjs';
 import { LoadingComponent } from '@c/core/loading/loading.component';
 import { LoadingService } from '@c/core/loading/loading.service';
+import { ArticleNew } from '@c/articles/model/article-new';
 
 @Component({
              selector: 'cs-article-new',
@@ -62,7 +63,7 @@ export class ArticleNewComponent
   private readonly articleCKEditor!: ArticleCKEditorComponent;
   formTitleUrl!: FormGroup;
   formResume!: FormGroup;
-  private editArticle!: Article;
+  private editArticle!: ArticleDetail;
 
   constructor(private readonly _formBuilder: FormBuilder,
               private readonly _articleService: ArticleService,
@@ -88,7 +89,7 @@ export class ArticleNewComponent
         .data
         .pipe(map(data => data['article']))
         .subscribe({
-                     next: (data: Article) => {
+                     next: (data: ArticleDetail) => {
                        this.editArticle = data;
                        this._loadingService.hide()
                      },
@@ -106,7 +107,7 @@ export class ArticleNewComponent
                .group(
                  {
                    resume: new FormControl(this.editArticle?.resume),
-                   tag: new FormControl(this.editArticle?.tag, [Validators.required])
+                   tag: new FormControl(this.editArticle?.tagName, [Validators.required])
                  }
                )
   }
@@ -125,39 +126,47 @@ export class ArticleNewComponent
   private processToSave(result: boolean) {
     if(result && this.formResume.valid && this.formTitleUrl.valid) {
       const article = this.mountNewArticle();
-      this._articleService.save(article)
-          .subscribe({
-                       next: result => {
-                         this._route.navigate(['/', 'article', 'show', result.id],
-                                              {
-                                                state: {
-                                                  isSuccess: !!result,
-                                                  isUpdate: this._router.snapshot.url.find(url => url.path == 'edit') !== undefined
-                                                }
-                                              })
-                             .catch(() => this._messageRef.error('Falha ao salvar o artigo!!'));
-                       },
-                       error: (error) => {
-                         this._messageRef.error('Falha ao salvar o artigo!!')
-                       }
-                     });
-
+      if(this.editArticle?.id) {
+        this._articleService.update(this.editArticle.id, article)
+      } else {
+        this._articleService.save(article)
+            .subscribe(this.handleSaveResult());
+      }
     }
   }
 
+  private handleSaveResult() {
+    return {
+      next: (result: ArticleDetail) => {
+        this._route.navigate(['/', 'article', 'show', result.id],
+                             {
+                               state: {
+                                 isSuccess: !!result,
+                                 isUpdate: this._router.snapshot.url.find(url => url.path == 'edit') !== undefined
+                               }
+                             })
+            .catch(() => this._messageRef.error('Falha ao salvar o artigo!!'));
+      },
+      error: () => {
+        this._messageRef.error('Falha ao salvar o artigo!!')
+      }
+    };
+  }
 
-  private mountNewArticle(): Article {
+  private mountNewArticle(): ArticleNew {
     const { title, url } = this.formTitleUrl.controls;
     const { resume, tag } = this.formResume.controls;
     return {
-      id: this.editArticle?.id,
-      author: 'Jose Arnaldo',
+      idAuthor: '671ab02f24492e4fdc91465d',
       content: this.articleCKEditor.articleData,
       linkImg: url?.value,
       resume: resume?.value,
-      dtPublication: new Date().toLocaleDateString(),
-      tag: tag.value,
-      title: title.value
+      idTag: tag.value,
+      title: title.value,
+      dtPublish: new Date(),
+      dtLastUpdate: new Date(),
+      dtCreate: new Date(),
+      status: 1
     }
   }
 

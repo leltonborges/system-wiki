@@ -10,7 +10,7 @@ import {
   NgOptimizedImage
 } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
-import { Article } from '@c/articles/model/article';
+import { ArticleDetail } from '@c/articles/model/article-detail';
 import {
   ActivatedRoute,
   Router
@@ -28,7 +28,7 @@ import { IconSvgComponent } from '@c/core/icon-svg/icon-svg.component';
            })
 export class ArticleComponent {
   @Input({ alias: 'article', required: true })
-  article!: Article;
+  article!: ArticleDetail;
 
   constructor(private readonly _router: Router,
               private readonly _activatedRoute: ActivatedRoute,

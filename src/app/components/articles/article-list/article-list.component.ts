@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { ArticleComponent } from '@c/articles/article/article.component';
 import { ArticleService } from '../../../common/service/article.service';
-import { Articles } from '@c/articles/model/article';
+import { Articles } from '@c/articles/model/article-detail';
 import {
   BehaviorSubject,
   map

@@ -1,8 +1,8 @@
-import { Articles } from '@c/articles/model/article';
+import { Articles } from '@c/articles/model/article-detail';
 
 export interface PageArticles {
-  last: boolean;
-  pages: number;
-  items: number;
+  currentPage: number;
+  totalPages: number;
+  totalCount: number;
   data: Articles;
 }

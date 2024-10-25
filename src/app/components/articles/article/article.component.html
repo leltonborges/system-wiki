@@ -5,8 +5,8 @@
          alt="avatar"
          fill
          ngSrc="/assets/img/person.png">
-    <mat-card-title>{{ article.author }}</mat-card-title>
-    <mat-card-subtitle>{{ article.tag }}</mat-card-subtitle>
+    <mat-card-title>{{ article.authorName }}</mat-card-title>
+    <mat-card-subtitle>{{ article.tagName }}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
     <img alt="card"
@@ -22,6 +22,6 @@
   </mat-card-content>
   <mat-card-footer class="card-footer">
     <button mat-button (click)="openArticle()">Continue lendo</button>
-    <span class="card-data">{{ article.dtPublication }}</span>
+    <span class="card-data">{{ article.dtPublish }}</span>
   </mat-card-footer>
 </mat-card>
