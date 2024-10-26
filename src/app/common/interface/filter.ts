@@ -6,8 +6,8 @@ export interface Filter {
   tag?: string;
   startDate?: string;
   endDate?: string;
-  page?: number;
-  pageSize?: number;
+  page: number;
+  pageSize: number;
 }
 
 export const filterDefault: Filter = {

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IconSvgComponent } from '@c/core/icon-svg/icon-svg.component';
+import { IconSvgComponent } from '@c/core/components/icon-svg/icon-svg.component';
 import { MatIcon } from '@angular/material/icon';
 import { MatFabButton } from '@angular/material/button';
 import { RouterLink } from '@angular/router';

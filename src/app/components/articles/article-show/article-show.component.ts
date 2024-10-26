@@ -13,7 +13,7 @@ import { ArticleDetail } from '@c/articles/model/article-detail';
 import { map } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgIf } from '@angular/common';
-import { IconComponent } from '@c/core/icon/icon.component';
+import { IconComponent } from '@c/core/components/icon/icon.component';
 import { MatIconButton } from '@angular/material/button';
 import { DialogRef } from '@c/core/common/dialog-ref';
 import { MessageRef } from '@c/core/common/message-ref';
@@ -23,8 +23,8 @@ import {
 } from 'ckeditor5';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { plugins } from '@c/articles/constants/plugins';
-import { LoadingComponent } from '@c/core/loading/loading.component';
-import { LoadingService } from '@c/core/loading/loading.service';
+import { LoadingComponent } from '@c/core/components/loading/loading.component';
+import { LoadingService } from '@c/core/components/loading/loading.service';
 
 @Component({
              selector: 'cs-article-show',

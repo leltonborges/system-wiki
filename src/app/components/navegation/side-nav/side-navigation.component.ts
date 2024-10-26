@@ -32,7 +32,10 @@ import {
   Tags
 } from '@c/navegation/model/tag';
 import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
-import { Filter } from '../../../common/interface/Filter';
+import {
+  Filter,
+  filterDefault
+} from '../../../common/interface/filter';
 import { FilterService } from '../../../common/service/filter.service';
 import { Subscription } from 'rxjs';
 import { MatSidenav } from '@angular/material/sidenav';
@@ -114,6 +117,7 @@ export class SideNavigationComponent
     const { title, author, tag, startDate, endDate } = this.formFilter.controls;
     const selectedTag = this.getTag(tag.value?.toUpperCase());
     const filter: Filter = {
+      ...filterDefault,
       title: title.value,
       author: author.value,
       tag: selectedTag?.id,

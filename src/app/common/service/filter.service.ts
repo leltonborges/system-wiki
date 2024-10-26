@@ -7,7 +7,7 @@ import {
   Filter,
   filterDefault,
   filterValid
-} from '../interface/Filter';
+} from '../interface/filter';
 
 @Injectable({
               providedIn: 'root'

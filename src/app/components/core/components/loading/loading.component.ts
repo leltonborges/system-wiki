@@ -4,7 +4,7 @@ import {
   NgZone
 } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { LoadingService } from '@c/core/loading/loading.service';
+import { LoadingService } from '@c/core/components/loading/loading.service';
 import { NgIf } from '@angular/common';
 
 @Component({

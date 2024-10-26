@@ -7,7 +7,7 @@ import { inject } from '@angular/core';
 import { ArticleService } from '../../../common/service/article.service';
 import { Observable } from 'rxjs';
 import { PageArticles } from '../model/page-articles';
-import { Filter } from '../../../common/interface/Filter';
+import { Filter } from '../../../common/interface/filter';
 
 export const articlesPageResolver: ResolveFn<PageArticles> = (route: ActivatedRouteSnapshot,
                                                               state: RouterStateSnapshot): Observable<PageArticles> => {

@@ -16,7 +16,7 @@ import {
   Router
 } from '@angular/router';
 import { MessageRef } from '@c/core/common/message-ref';
-import { IconSvgComponent } from '@c/core/icon-svg/icon-svg.component';
+import { IconSvgComponent } from '@c/core/components/icon-svg/icon-svg.component';
 
 @Component({
              selector: 'cs-article',

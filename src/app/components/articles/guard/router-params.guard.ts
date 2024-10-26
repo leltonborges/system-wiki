@@ -9,7 +9,7 @@ import {
   Filter,
   filterValid,
   invalidFilter
-} from '../../../common/interface/Filter';
+} from '../../../common/interface/filter';
 import { FilterService } from '../../../common/service/filter.service';
 
 export const routerParamsGuard: CanActivateFn = (route: ActivatedRouteSnapshot,

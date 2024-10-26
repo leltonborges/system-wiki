@@ -1,4 +1,4 @@
-<ng-container *ngIf="articles$ | async as articles; else notFound">
+<ng-container *ngIf="(articles$ | async)?.length; else notFound">
   <section>
     @for (item of (articles$ | async); track item.id) {
       <cs-article [article]="item"></cs-article>
@@ -14,7 +14,6 @@
                  aria-label="Select page">
   </mat-paginator>
 </ng-container>
-
 
 <ng-template #notFound>
   <div class="not-found">

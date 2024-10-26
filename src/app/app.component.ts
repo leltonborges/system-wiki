@@ -14,7 +14,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MediaMatcher } from '@angular/cdk/layout';
-import { IconComponent } from '@c/core/icon/icon.component';
+import { IconComponent } from '@c/core/components/icon/icon.component';
 import { SideNavigationComponent } from '@c/navegation/side-nav/side-navigation.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 

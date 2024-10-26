@@ -19,7 +19,7 @@ import {
   MatPaginatorModule,
   PageEvent
 } from '@angular/material/paginator';
-import { IconSvgComponent } from '@c/core/icon-svg/icon-svg.component';
+import { IconSvgComponent } from '@c/core/components/icon-svg/icon-svg.component';
 
 
 @Component({
@@ -61,6 +61,10 @@ export class ArticleListComponent
 
   get articles$(): BehaviorSubject<Articles> {
     return this._articles$;
+  }
+
+  hasArticles(): boolean {
+    return this._articles$.value.length > 0;
   }
 
   handlePageEvent(e: PageEvent) {

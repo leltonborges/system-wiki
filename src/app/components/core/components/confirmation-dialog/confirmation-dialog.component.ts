@@ -8,7 +8,7 @@ import {
   MAT_DIALOG_DATA,
   MatDialogModule
 } from '@angular/material/dialog';
-import { DialogContent } from '../../../core/model/dialog-content';
+import { DialogContent } from '../../../../core/model/dialog-content';
 
 
 @Component({

@@ -33,9 +33,11 @@ import {
   Router
 } from '@angular/router';
 import { map } from 'rxjs';
-import { LoadingComponent } from '@c/core/loading/loading.component';
-import { LoadingService } from '@c/core/loading/loading.service';
+import { LoadingComponent } from '@c/core/components/loading/loading.component';
+import { LoadingService } from '@c/core/components/loading/loading.service';
 import { ArticleNew } from '@c/articles/model/article-new';
+import { ErrorResponse } from '../../../common/interface/error-response';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
              selector: 'cs-article-new',
@@ -128,7 +130,9 @@ export class ArticleNewComponent
       const article = this.mountNewArticle();
       if(this.editArticle?.id) {
         this._articleService.update(this.editArticle.id, article)
+            .subscribe(this.handleSaveResult())
       } else {
+        console.table(article)
         this._articleService.save(article)
             .subscribe(this.handleSaveResult());
       }
@@ -145,10 +149,12 @@ export class ArticleNewComponent
                                  isUpdate: this._router.snapshot.url.find(url => url.path == 'edit') !== undefined
                                }
                              })
-            .catch(() => this._messageRef.error('Falha ao salvar o artigo!!'));
+            .catch(() => this._messageRef.error('Falha na navegação!!'));
       },
-      error: () => {
-        this._messageRef.error('Falha ao salvar o artigo!!')
+      error: (err: HttpErrorResponse) => {
+        const error = err.error as ErrorResponse;
+        if(error.fields) this._messageRef.errorFields(error.fields)
+        else this._messageRef.error(error.message)
       }
     };
   }

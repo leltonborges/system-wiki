@@ -4,6 +4,10 @@ import {
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition
 } from '@angular/material/snack-bar';
+import {
+  FieldError,
+  FieldErrors
+} from '../../../common/interface/error-response';
 
 @Injectable({
               providedIn: 'root'
@@ -23,6 +27,22 @@ export class MessageRef {
                           horizontalPosition,
                           verticalPosition
                         });
+  }
+
+  errorFields(fields: FieldErrors,
+              duration: number = 5000,
+              horizontalPosition: MatSnackBarHorizontalPosition = 'end',
+              verticalPosition: MatSnackBarVerticalPosition = 'top') {
+    fields.forEach((field: FieldError,
+                    index: number) => {
+      setTimeout(() => {
+        this._snackBar.open(`${ field.field }: ${ field.message }`, 'Close', {
+          duration,
+          horizontalPosition,
+          verticalPosition
+        });
+      }, duration * index);
+    });
   }
 
   success(msg: string,

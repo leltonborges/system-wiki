@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { PageArticles } from '@c/articles/model/page-articles';
 import { ArticleDetail } from '@c/articles/model/article-detail';
 import { environment } from '../../../environments/environment';
-import { Filter } from '../interface/Filter';
+import { Filter } from '../interface/filter';
 import { ArticleNew } from '@c/articles/model/article-new';
 
 @Injectable({
@@ -17,7 +17,7 @@ export class ArticleService {
   constructor(private readonly httpClient: HttpClient) {}
 
   findAllPage(filter: Filter): Observable<PageArticles> {
-    return this.httpClient.get<PageArticles>(`${ this.API }/article/list/status/1?page=${ filter.page }&size=${ filter.pageSize }`);
+    return this.httpClient.get<PageArticles>(`${ this.API }/article/list/status/1?page=${ filter.page - 1 }&size=${ filter.pageSize }`);
   }
 
   findByID(id: string): Observable<ArticleDetail> {
@@ -25,11 +25,11 @@ export class ArticleService {
   }
 
   save(article: ArticleNew): Observable<ArticleDetail> {
-    return this.httpClient.post<ArticleDetail>(`${ this.API }/articles`, article);
+    return this.httpClient.post<ArticleDetail>(`${ this.API }/article/save`, article);
   }
 
   update(idArticle: string,
          article: ArticleNew): Observable<ArticleDetail> {
-    return this.httpClient.put<ArticleDetail>(`${ this.API }/articles/${ idArticle }`, article);
+    return this.httpClient.put<ArticleDetail>(`${ this.API }/article/${ idArticle }/update`, article);
   }
 }
