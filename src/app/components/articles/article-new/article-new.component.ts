@@ -32,7 +32,10 @@ import {
   ActivatedRoute,
   Router
 } from '@angular/router';
-import { map } from 'rxjs';
+import {
+  map,
+  switchMap
+} from 'rxjs';
 import { LoadingComponent } from '@c/core/components/loading/loading.component';
 import { LoadingService } from '@c/core/components/loading/loading.service';
 import { ArticleNew } from '@c/articles/model/article-new';
@@ -69,6 +72,8 @@ export class ArticleNewComponent
   formTitleUrl!: FormGroup;
   formResume!: FormGroup;
   private editArticle!: ArticleDetail;
+  private _tags!: Tags;
+
   constructor(private readonly _formBuilder: FormBuilder,
               private readonly _articleService: ArticleService,
               private readonly _loadingService: LoadingService,
@@ -77,21 +82,7 @@ export class ArticleNewComponent
               private readonly _messageRef: MessageRef,
               private readonly _tagService: TagService,
               private readonly _dialogRef: DialogRef) {
-    this.formTitleUrl = this.createFormTitleURL();
-    this.formResume = this.createdFormResume()
   }
-
-  private _tags!: Tags;
-
-  get contentArticle(): string {
-    return this.editArticle?.content ?? '';
-  }
-
-  ngAfterViewInit(): void {
-    this.urlErrorMessage();
-    this.titleErrorMessage()
-  }
-
   get tags(): Tags {
     return this._tags;
   }
@@ -101,29 +92,43 @@ export class ArticleNewComponent
     return tag as FormControl;
   }
 
+  get contentArticle(): string {
+    return this.editArticle?.content ?? '';
+
+  }
+
   ngOnInit(): void {
     this._router
         .data
-        .pipe(map(data => data['article']))
+        .pipe(map(data => data['article']),
+              switchMap((data: ArticleDetail) => {
+                this.editArticle = data;
+                this.formTitleUrl = this.createFormTitleURL();
+                this.formResume = this.createdFormResume()
+                return this._tagService.findAllTags()
+              }))
         .subscribe({
-                     next: (data: ArticleDetail) => {
-                       this.editArticle = data;
+                     next: result => {
+                       this._tags = result
                        this._loadingService.hide()
                      },
                      error: () => {
-                       this._loadingService.hide()
-                       this._messageRef.error('Erro ao carregar o artigo.');
+                       this._loadingService.hide();
+                       this._messageRef.error('Erro ao carregar o artigo ou tags.');
                      }
                    });
-    this._tagService.findAllTags()
-        .subscribe(result => this._tags = result);
+  }
+
+  ngAfterViewInit(): void {
+    this.urlErrorMessage();
+    this.titleErrorMessage()
   }
 
   private createdFormResume(): FormGroup {
     return this._formBuilder
                .group(
                  {
-                   resume: new FormControl(this.editArticle?.resume),
+                   resume: new FormControl(this.editArticle?.resume ?? ''),
                    tag: new FormControl(this.editArticle?.tagName, [Validators.required])
                  }
                )
@@ -170,6 +175,7 @@ export class ArticleNewComponent
         const error = err.error as ErrorResponse;
         if(error.fields) this._messageRef.errorFields(error.fields)
         else this._messageRef.error(error.message)
+        console.error(err)
       }
     };
   }
@@ -178,11 +184,11 @@ export class ArticleNewComponent
     const { title, url } = this.formTitleUrl.controls;
     const { resume, tag } = this.formResume.controls;
     return {
-      idAuthor: '671ab02f24492e4fdc91465d',
+      idAuthor: '671d0112f19bbb3424a23606',
       content: this.articleCKEditor.articleData,
       linkImg: url?.value,
       resume: resume?.value,
-      idTag: tag.value,
+      idTag: this._tags.find(t => t.name == tag.value)?.id ?? '',
       title: title.value,
       dtPublish: new Date(),
       dtLastUpdate: new Date(),
