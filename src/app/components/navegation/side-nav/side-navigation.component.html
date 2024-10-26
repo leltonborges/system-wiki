@@ -16,24 +16,11 @@
              matInput
              placeholder="Nome o Autor">
     </mat-form-field>
-    <mat-form-field class="field-group"
-                    matTooltip="Tag aplicada ao artigo"
-                    matTooltipPosition="right">
-      <mat-label>#Tag</mat-label>
-      <input #inputTag
-             (focus)="filterTag()"
-             (input)="filterTag()"
-             [matAutocomplete]="auto"
-             formControlName="tag"
-             matInput
-             placeholder="Tag"
-             type="text"/>
-      <mat-autocomplete #auto="matAutocomplete" requireSelection>
-        @for (tag of tagsOptions; track tag.id) {
-          <mat-option [value]="tag.name">{{ tag.name }}</mat-option>
-        }
-      </mat-autocomplete>
-    </mat-form-field>
+    <cs-select-tag #selectTag
+                   [tags]="tagsOptions"
+                   class="field-group"
+                   key="name"
+                   value="name"></cs-select-tag>
     <mat-form-field class="field-group"
                     matTooltip="Data minima de publicação do artigo para a filtragem"
                     matTooltipPosition="right">

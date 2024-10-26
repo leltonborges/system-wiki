@@ -39,6 +39,7 @@ import {
 import { FilterService } from '../../../common/service/filter.service';
 import { Subscription } from 'rxjs';
 import { MatSidenav } from '@angular/material/sidenav';
+import { SelectTagComponent } from '@c/core/components/select-tag/select-tag.component';
 
 const FORMAT_DATE = {
   parse: {
@@ -65,7 +66,8 @@ const FORMAT_DATE = {
                MatButtonModule,
                MatIconModule,
                MatTooltipModule,
-               MatAutocompleteModule
+               MatAutocompleteModule,
+               SelectTagComponent
              ],
              templateUrl: './side-navigation.component.html',
              styleUrl: './side-navigation.component.sass',
@@ -80,13 +82,14 @@ export class SideNavigationComponent
   readonly maxDate = new Date();
   readonly formFilter = this.createdFormGroup();
   tagsOptions: Tags = []
+  //   @ViewChild('selectTag')
+  // selectTag!: SelectTagComponent;
   @ViewChild('inputTag')
   inputTag!: ElementRef<HTMLInputElement>;
   @Input({ alias: 'toggle' })
   sidenav!: MatSidenav;
   private _tags!: Tags;
   private filterSubscription!: Subscription;
-
 
   constructor(private readonly _messageRef: MessageRef,
               private readonly _route: Router,
@@ -129,11 +132,6 @@ export class SideNavigationComponent
         .catch(() => this._messageRef.error('Error na navegação'))
   }
 
-  filterTag(): void {
-    const filterValue = this.inputTag.nativeElement.value.toLowerCase();
-    this.tagsOptions = this._tags.filter(o => o.name.toLowerCase().includes(filterValue));
-  }
-
   setYearMonthStart(yearMonthSelect: Moment,
                     datepicker: MatDatepicker<Moment>) {
     const { endDate } = this.formFilter.controls;
@@ -172,7 +170,7 @@ export class SideNavigationComponent
   private getTag(nameOrId: string): Tag | undefined {
     return this._tags.find(t =>
                              t.name.toUpperCase()
-                              .includes(nameOrId.toUpperCase())
+                              .includes(nameOrId?.toUpperCase())
                              || t.id == nameOrId);
   }
 

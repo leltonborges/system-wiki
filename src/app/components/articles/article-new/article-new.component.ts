@@ -132,7 +132,6 @@ export class ArticleNewComponent
         this._articleService.update(this.editArticle.id, article)
             .subscribe(this.handleSaveResult())
       } else {
-        console.table(article)
         this._articleService.save(article)
             .subscribe(this.handleSaveResult());
       }
