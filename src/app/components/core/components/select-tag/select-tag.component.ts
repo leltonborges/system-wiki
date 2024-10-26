@@ -2,6 +2,7 @@ import {
   Component,
   ElementRef,
   Input,
+  OnInit,
   ViewChild
 } from '@angular/core';
 import {
@@ -46,36 +47,40 @@ import {
              templateUrl: './select-tag.component.html',
              styleUrl: './select-tag.component.sass'
            })
-export class SelectTagComponent {
-
+export class SelectTagComponent
+  implements OnInit {
   @ViewChild('inputTag')
   inputTag!: ElementRef<HTMLInputElement>;
   @Input({ alias: 'key', required: true })
   keyField!: keyof Tag
   @Input({ alias: 'value', required: true })
   valueField!: keyof Tag
-  private readonly _tagFormControl: FormControl = new FormControl('');
-
-  private _tags!: Tags
+  @Input({ alias: 'tagFormControl' })
+  tagFormControl: FormControl = new FormControl('');
+  @Input({ alias: 'hasError' })
+  hasError: boolean = false;
 
   @Input({ alias: 'tags', required: true })
-  set tags(tags: Tags) {
-    this._tags = tags
-    this._tagsOptions = tags
-  }
+  _tags!: Tags
 
   private _tagsOptions!: Tags
+
+  ngOnInit(): void {
+    this._tagsOptions = this._tags
+  }
 
   get tagsOptions(): Tags {
     return this._tagsOptions;
   }
 
-  get tagFormControl(): FormControl {
-    return this._tagFormControl;
-  }
-
   filterTag(): void {
     const filterValue = this.inputTag.nativeElement.value.toLowerCase();
     this._tagsOptions = this._tags.filter(o => o.name.toLowerCase().includes(filterValue));
+  }
+
+  tagErrorMessage(): string {
+    if(this.tagFormControl.touched && this.tagFormControl.hasError('required'))
+      return 'Campo obrigatório.'
+    return ''
   }
 }

@@ -15,4 +15,5 @@
       <mat-option [value]="tag[keyField]">{{ tag[valueField] }}</mat-option>
     }
   </mat-autocomplete>
+  <mat-error *ngIf="hasError">{{ tagErrorMessage() }}</mat-error>
 </mat-form-field>

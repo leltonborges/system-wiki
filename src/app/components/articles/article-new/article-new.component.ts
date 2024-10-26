@@ -38,6 +38,9 @@ import { LoadingService } from '@c/core/components/loading/loading.service';
 import { ArticleNew } from '@c/articles/model/article-new';
 import { ErrorResponse } from '../../../common/interface/error-response';
 import { HttpErrorResponse } from '@angular/common/http';
+import { SelectTagComponent } from '@c/core/components/select-tag/select-tag.component';
+import { TagService } from '../../../common/service/tag.service';
+import { Tags } from '@c/navegation/model/tag';
 
 @Component({
              selector: 'cs-article-new',
@@ -51,7 +54,7 @@ import { HttpErrorResponse } from '@angular/common/http';
                        MatButtonModule,
                        MatIconModule,
                        ArticleCKEditorComponent,
-                       LoadingComponent],
+                       LoadingComponent, SelectTagComponent],
              templateUrl: './article-new.component.html',
              styleUrl: './article-new.component.sass',
              encapsulation: ViewEncapsulation.None
@@ -66,15 +69,19 @@ export class ArticleNewComponent
   formTitleUrl!: FormGroup;
   formResume!: FormGroup;
   private editArticle!: ArticleDetail;
-
   constructor(private readonly _formBuilder: FormBuilder,
               private readonly _articleService: ArticleService,
               private readonly _loadingService: LoadingService,
               private readonly _router: ActivatedRoute,
               private readonly _route: Router,
               private readonly _messageRef: MessageRef,
+              private readonly _tagService: TagService,
               private readonly _dialogRef: DialogRef) {
+    this.formTitleUrl = this.createFormTitleURL();
+    this.formResume = this.createdFormResume()
   }
+
+  private _tags!: Tags;
 
   get contentArticle(): string {
     return this.editArticle?.content ?? '';
@@ -82,8 +89,16 @@ export class ArticleNewComponent
 
   ngAfterViewInit(): void {
     this.urlErrorMessage();
-    this.tagErrorMessage();
     this.titleErrorMessage()
+  }
+
+  get tags(): Tags {
+    return this._tags;
+  }
+
+  get tagFormControl(): FormControl {
+    const { tag } = this.formResume.controls;
+    return tag as FormControl;
   }
 
   ngOnInit(): void {
@@ -100,8 +115,8 @@ export class ArticleNewComponent
                        this._messageRef.error('Erro ao carregar o artigo.');
                      }
                    });
-    this.formTitleUrl = this.createFormTitleURL();
-    this.formResume = this.createdFormResume()
+    this._tagService.findAllTags()
+        .subscribe(result => this._tags = result);
   }
 
   private createdFormResume(): FormGroup {
@@ -132,6 +147,7 @@ export class ArticleNewComponent
         this._articleService.update(this.editArticle.id, article)
             .subscribe(this.handleSaveResult())
       } else {
+        console.table(article)
         this._articleService.save(article)
             .subscribe(this.handleSaveResult());
       }
@@ -214,11 +230,4 @@ export class ArticleNewComponent
     }
     return ''
   }
-
-  tagErrorMessage(): string {
-    const { tag } = this.formResume.controls;
-    if(tag.touched && tag.hasError('required')) return 'Campo obrigatório.'
-    return ''
-  }
-
 }

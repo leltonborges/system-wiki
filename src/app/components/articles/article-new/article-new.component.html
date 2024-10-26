@@ -44,15 +44,11 @@
     <mat-step [stepControl]="formResume">
       <form [formGroup]="formResume" class="form">
         <ng-template matStepLabel>Resumo e Categoria</ng-template>
-        <mat-form-field>
-          <mat-label>Tag</mat-label>
-          <mat-select formControlName="tag">
-            <mat-option value="one">First option</mat-option>
-            <mat-option value="two">Second option</mat-option>
-            <mat-option value="#Python">#Python</mat-option>
-          </mat-select>
-            <mat-error>{{ tagErrorMessage() }}</mat-error>
-        </mat-form-field>
+        <cs-select-tag [hasError]="true"
+                       [tagFormControl]="tagFormControl"
+                       [tags]="tags"
+                       key="name"
+                       value="name"></cs-select-tag>
         <mat-form-field class="field-textarea">
           <mat-label>Resumo</mat-label>
           <textarea matInput

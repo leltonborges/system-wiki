@@ -82,8 +82,6 @@ export class SideNavigationComponent
   readonly maxDate = new Date();
   readonly formFilter = this.createdFormGroup();
   tagsOptions: Tags = []
-  //   @ViewChild('selectTag')
-  // selectTag!: SelectTagComponent;
   @ViewChild('inputTag')
   inputTag!: ElementRef<HTMLInputElement>;
   @Input({ alias: 'toggle' })
@@ -109,6 +107,11 @@ export class SideNavigationComponent
           this.tagsOptions = tags;
           this.subscribeToFilterChanges();
         });
+  }
+
+  getTagFormControl(): FormControl {
+    const { tag } = this.formFilter.controls;
+    return tag as FormControl;
   }
 
   searchByFilter() {

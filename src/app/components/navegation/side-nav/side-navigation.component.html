@@ -16,7 +16,7 @@
              matInput
              placeholder="Nome o Autor">
     </mat-form-field>
-    <cs-select-tag #selectTag
+    <cs-select-tag [tagFormControl]="getTagFormControl()"
                    [tags]="tagsOptions"
                    class="field-group"
                    key="name"
