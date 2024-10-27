@@ -6,6 +6,7 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import {
+  DatePipe,
   NgIf,
   NgOptimizedImage
 } from '@angular/common';
@@ -21,7 +22,7 @@ import { IconSvgComponent } from '@c/core/components/icon-svg/icon-svg.component
 @Component({
              selector: 'cs-article',
              standalone: true,
-             imports: [MatCardModule, MatButtonModule, NgOptimizedImage, MatIcon, NgIf, IconSvgComponent],
+             imports: [MatCardModule, MatButtonModule, NgOptimizedImage, MatIcon, NgIf, IconSvgComponent, DatePipe],
              changeDetection: ChangeDetectionStrategy.OnPush,
              templateUrl: './article.component.html',
              styleUrl: './article.component.sass'

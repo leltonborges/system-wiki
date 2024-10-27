@@ -22,6 +22,6 @@
   </mat-card-content>
   <mat-card-footer class="card-footer">
     <button mat-button (click)="openArticle()">Continue lendo</button>
-    <span class="card-data">{{ article.dtPublish }}</span>
+    <span class="card-data">{{ article.dtLastUpdate | date: 'dd/MM/yyyy' }}</span>
   </mat-card-footer>
 </mat-card>

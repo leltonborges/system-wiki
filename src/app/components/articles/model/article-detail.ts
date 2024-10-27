@@ -6,9 +6,9 @@ export interface ArticleDetail {
   authorName: string;
   tagName: string;
   linkImg: string;
-  dtPublish: string;
-  dtCreate: string;
-  dtLastUpdate: string;
+  dtPublish: Date;
+  dtCreate: Date;
+  dtLastUpdate: Date;
   yearMonth: number;
 }
 

@@ -17,7 +17,8 @@
   <div class="container-footer-article">
     <div class="info-author">
       <span class="nome-author"><strong>Author: </strong>{{ article.authorName }}      </span>
-      <span class="date-publication"><strong>Publicado:</strong> {{ article.dtPublish }}</span>
+      <span class="date-publication"><strong>Publicado:</strong> {{ article.dtPublish | date: 'dd/MM/yyyy' }}</span>
+      <span class="date-publication"><strong>Atualizado:</strong> {{ article.dtLastUpdate | date: 'dd/MM/yyyy' }}</span>
       <span class="info-tag">
         <strong>Tag: </strong>{{ article.tagName }}
       </span>

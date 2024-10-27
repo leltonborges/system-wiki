@@ -12,7 +12,10 @@ import {
 import { ArticleDetail } from '@c/articles/model/article-detail';
 import { map } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { NgIf } from '@angular/common';
+import {
+  DatePipe,
+  NgIf
+} from '@angular/common';
 import { IconComponent } from '@c/core/components/icon/icon.component';
 import { MatIconButton } from '@angular/material/button';
 import { DialogRef } from '@c/core/common/dialog-ref';
@@ -35,7 +38,8 @@ import { LoadingService } from '@c/core/components/loading/loading.service';
                MatTooltipModule,
                MatIconButton,
                CKEditorModule,
-               LoadingComponent
+               LoadingComponent,
+               DatePipe
              ],
              templateUrl: './article-show.component.html',
              styleUrl: './article-show.component.sass',
