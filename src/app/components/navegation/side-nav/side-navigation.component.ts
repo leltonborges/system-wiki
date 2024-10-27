@@ -125,8 +125,8 @@ export class SideNavigationComponent
     const filter: Filter = {
       ...filterDefault,
       title: title.value,
-      author: author.value,
-      tag: selectedTag?.id,
+      authorName: author.value,
+      tagId: selectedTag?.id,
       startDate: startDate?.value,
       endDate: endDate?.value
     }
@@ -163,8 +163,8 @@ export class SideNavigationComponent
                                   .getFilterObservable()
                                   .subscribe((filter: Filter) => {
                                     let tag;
-                                    if(filter.tag) {
-                                      tag = this.getTag(filter.tag)?.name;
+                                    if(filter.tagId) {
+                                      tag = this.getTag(filter.tagId)?.name;
                                     }
                                     this.formFilter.patchValue({ ...filter, tag });
                                   });

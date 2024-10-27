@@ -6,23 +6,13 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  MatError,
-  MatFormField,
-  MatLabel
-} from '@angular/material/form-field';
-import { MatOption } from '@angular/material/core';
-import { MatSelect } from '@angular/material/select';
-import {
   FormControl,
   ReactiveFormsModule
 } from '@angular/forms';
 import { NgIf } from '@angular/common';
-import {
-  MatAutocomplete,
-  MatAutocompleteTrigger
-} from '@angular/material/autocomplete';
-import { MatInput } from '@angular/material/input';
-import { MatTooltip } from '@angular/material/tooltip';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import {
   Tag,
   Tags
@@ -31,18 +21,11 @@ import {
 @Component({
              selector: 'cs-select-tag',
              standalone: true,
-             imports: [
-               MatError,
-               MatFormField,
-               MatLabel,
-               MatOption,
-               MatSelect,
-               ReactiveFormsModule,
-               NgIf,
-               MatAutocomplete,
-               MatAutocompleteTrigger,
-               MatInput,
-               MatTooltip
+             imports: [ReactiveFormsModule,
+                       NgIf,
+                       MatAutocompleteModule,
+                       MatInputModule,
+                       MatTooltipModule
              ],
              templateUrl: './select-tag.component.html',
              styleUrl: './select-tag.component.sass'

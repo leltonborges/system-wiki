@@ -14,8 +14,8 @@ export const articlesPageResolver: ResolveFn<PageArticles> = (route: ActivatedRo
   const { title, author, tag, startDate, endDate, page, pageSize } = route.queryParams;
   const filter: Filter = {
     title,
-    author,
-    tag,
+    authorName: author,
+    tagId: tag,
     startDate,
     endDate,
     page,
