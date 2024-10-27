@@ -152,7 +152,6 @@ export class ArticleNewComponent
         this._articleService.update(this.editArticle.id, article)
             .subscribe(this.handleSaveResult())
       } else {
-        console.table(article)
         this._articleService.save(article)
             .subscribe(this.handleSaveResult());
       }
@@ -175,7 +174,6 @@ export class ArticleNewComponent
         const error = err.error as ErrorResponse;
         if(error.fields) this._messageRef.errorFields(error.fields)
         else this._messageRef.error(error.message)
-        console.error(err)
       }
     };
   }

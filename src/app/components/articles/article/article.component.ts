@@ -42,4 +42,8 @@ export class ArticleComponent {
           this._messageRef.error('Failed to navigate to article');
         });
   }
+
+  getResumeOrTitle(): string {
+    return this.article.resume.length < 5 ? this.article.title : this.article.resume
+  }
 }
