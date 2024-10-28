@@ -55,6 +55,8 @@ export class ArticleListComponent
         .subscribe({
                      next: (result: PageArticles) => {
                        this._articles$.next(result.data);
+                       this.length = result.totalCount;
+                       this.pageIndex = result.currentPage
                      }
                    })
   }

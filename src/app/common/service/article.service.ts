@@ -16,8 +16,14 @@ export class ArticleService {
 
   constructor(private readonly httpClient: HttpClient) {}
 
-  findAllPage(filter: Filter): Observable<PageArticles> {
-    return this.httpClient.get<PageArticles>(`${ this.API }/article/list/status/1?page=${ filter.page - 1 }&size=${ filter.pageSize }`);
+  findAllByFilterPage(filter: Filter): Observable<PageArticles> {
+    const url = `${ this.API }/article/list/status/1?page=${ filter.page - 1 }&size=${ filter.pageSize }`;
+    return this.httpClient.get<PageArticles>(url);
+  }
+
+  findAllSearch(filter: Filter): Observable<PageArticles> {
+    const url = `${ this.API }/article/search?keyword=${ filter.search }&page=${ filter.page - 1 }&size=${ filter.pageSize }`;
+    return this.httpClient.get<PageArticles>(url);
   }
 
   findByID(id: string): Observable<ArticleDetail> {

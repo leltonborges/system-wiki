@@ -3,6 +3,7 @@ import moment from 'moment';
 export interface Filter {
   title?: string;
   authorName?: string;
+  search?: string;
   tagId?: string;
   startDate?: string;
   endDate?: string;
