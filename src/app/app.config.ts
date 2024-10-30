@@ -17,6 +17,10 @@ import {
   providerLocalePT,
   providerPaginatorPT
 } from './material-locale-pt';
+import { provideStore } from '@ngrx/store';
+import { reducers } from './common/reducer';
+import { provideEffects } from '@ngrx/effects';
+import { articleEffects } from './common/reducer/article/article.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }),
@@ -26,5 +30,7 @@ export const appConfig: ApplicationConfig = {
               importProvidersFrom(MatNativeDateModule),
               providerPaginatorPT,
               providerLocalePT,
-              providerDatePT]
+              providerDatePT,
+              provideStore(reducers),
+              provideEffects(articleEffects)]
 };

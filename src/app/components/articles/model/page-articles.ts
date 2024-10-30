@@ -6,3 +6,10 @@ export interface PageArticles {
   totalCount: number;
   data: Articles;
 }
+
+export const pageEmpty: PageArticles = {
+  currentPage: 0,
+  totalPages: 0,
+  data: [],
+  totalCount: 0
+};

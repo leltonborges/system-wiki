@@ -10,23 +10,25 @@ import {
   filterValid,
   invalidFilter
 } from '../../../common/interface/filter';
-import { FilterService } from '../../../common/service/filter.service';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../common/reducer';
+import { filterActions } from '../../../common/reducer/filter/filter.actions';
 
 export const routerParamsGuard: CanActivateFn = (route: ActivatedRouteSnapshot,
                                                  state: RouterStateSnapshot) => {
   const router = inject(Router);
-  const filterService = inject(FilterService);
+  const store$ = inject(Store<AppState>);
 
   const filterParams: Filter = route.queryParams as Filter;
   if(invalidFilter(filterParams)) {
-    router.navigate(['/article', 'list'], {
-      queryParams: filterService.push(filterValid(filterParams))
-    }).catch(console.error);
+    const filter = filterValid(filterParams);
+    router.navigate(['/article', 'list'], { queryParams: filter })
+          .then(_ => store$.dispatch(filterActions.setFilterAction({ filter })))
+          .catch(console.error);
 
     return false;
   }
-
-  filterService.push(filterParams)
+  store$.dispatch(filterActions.setFilterAction({ filter: filterParams }))
 
   return true;
 };

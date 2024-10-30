@@ -182,7 +182,7 @@ export class ArticleNewComponent
     const { title, url } = this.formTitleUrl.controls;
     const { resume, tag } = this.formResume.controls;
     return {
-      idAuthor: '671d0112f19bbb3424a23606',
+      idAuthor: '67218b8bfdf8a104ee391f4b',
       content: this.articleCKEditor.articleData,
       linkImg: url?.value,
       resume: resume?.value,

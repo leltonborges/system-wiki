@@ -26,6 +26,8 @@
     "@fortawesome/free-brands-svg-icons": "^6.5.2",
     "@fortawesome/free-regular-svg-icons": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@ngrx/effects": "18.1.0",
+    "@ngrx/store": "18.1.0",
     "ckeditor5": "^43.1.1",
     "moment": "^2.30.1",
     "rxjs": "~7.8.0",
