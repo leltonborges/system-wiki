@@ -6,7 +6,6 @@ import {
 import { ArticleComponent } from '@c/articles/article/article.component';
 import {
   distinctUntilChanged,
-  filter,
   Observable,
   Subject,
   take,
@@ -27,11 +26,9 @@ import {
 import { IconSvgComponent } from '@c/core/components/icon-svg/icon-svg.component';
 import { AppState } from '../../../common/reducer';
 import { Store } from '@ngrx/store';
-import { selectSearchQuery } from '../../../common/reducer/search/search.selectors';
 import { articleSelectors } from '../../../common/reducer/article/article.selectors';
 import { PageArticles } from '@c/articles/model/page-articles';
 import { filterActions } from '../../../common/reducer/filter/filter.actions';
-import { articleActions } from '../../../common/reducer/article/article.actions';
 import { selectFilter } from '../../../common/reducer/filter/filter.selectors';
 
 @Component({
@@ -69,17 +66,13 @@ export class ArticleListComponent
                         distinctUntilChanged((prev,
                                               curr) => prev.data === curr.data))
         .subscribe(result => {
-          console.log('result: ', result)
           this.length = result.totalCount;
           this.pageIndex = result.currentPage;
         })
     const paramSearch: string = this._activatedRoute.snapshot.queryParams['search'];
-    this._store$.select(selectSearchQuery)
-        .pipe(filter(value => !!paramSearch && value !== paramSearch),
-              take(1))
-        .subscribe(() => {
-          this._store$.dispatch(filterActions.setFieldSearch({ query: paramSearch }));
-        });
+    if(paramSearch?.length > 4) {
+      this._store$.dispatch(filterActions.setFieldSearch({ query: paramSearch }));
+    }
   }
 
   hasArticles(): boolean {
@@ -100,9 +93,7 @@ export class ArticleListComponent
             page: e.pageIndex,
             pageSize: e.pageSize
           };
-          console.table(updatedFilter)
           this._store$.dispatch(filterActions.setFilterAction({ filter: updatedFilter }));
-          this._store$.dispatch(articleActions.loadArticles());
           this._router.navigate(['article/list'],
                                 {
                                   queryParams: updatedFilter,

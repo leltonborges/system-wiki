@@ -14,7 +14,9 @@ import {
   distinctUntilChanged,
   filter,
   firstValueFrom,
+  from,
   Subject,
+  switchMap,
   takeUntil,
   tap
 } from 'rxjs';
@@ -45,7 +47,6 @@ import { selectFilter } from '../../../common/reducer/filter/filter.selectors';
 export class SearchComponent
   implements OnInit,
              OnDestroy {
-  readonly debounce$: Subject<string> = new Subject<string>();
   private readonly destroy$ = new Subject<void>();
   readonly inputSearch = new FormControl();
   @Input({ alias: 'modal' })
@@ -65,18 +66,15 @@ export class SearchComponent
   ngOnInit(): void {
     this.loadSearchResults();
     this.listenForInputChanges();
-    this.debounce$.pipe(debounceTime(3000),
-                        tap(vl => {
-                          if(!vl || vl.length < 5) {
-                            this.inputSearch.reset();
-                            this._route.navigate(['/']).catch(console.error)
-                          }
-                        }),
-                        filter(res => !!res && res.length >= 5)
-    )
-        .subscribe(() => {
-          this.searchArticles().then(this.listener).catch(console.error)
-        });
+  }
+
+  private validateSearchInput() {
+    return tap((vl: string) => {
+      if(!vl || vl.length < 5) {
+        this.inputSearch.reset();
+        this._route.navigate(['/']).catch(console.error)
+      }
+    });
   }
 
   private async searchArticles(): Promise<boolean> {
@@ -87,25 +85,42 @@ export class SearchComponent
   private listenForInputChanges() {
     this.inputSearch
         .valueChanges
-        .pipe(takeUntil(this.destroy$),
-              filter(() => !this.isUpdating),
-              distinctUntilChanged())
-        .subscribe(value => {
-          this._store.dispatch(filterActions.setFieldSearch({ query: this.inputSearch.value }));
-
-        })
+        .pipe(
+          debounceTime(3000),
+          this.validateSearchInput(),
+          takeUntil(this.destroy$),
+          filter(() => !this.isUpdating),
+          distinctUntilChanged(),
+          switchMap(value => {
+            this.isUpdating = true;
+            this._store.dispatch(filterActions.setFieldSearch({ query: value }));
+            return from(this.searchArticles());
+          })
+        )
+        .subscribe({
+                     next: () => {
+                       this.isUpdating = false;
+                       this.listener();
+                     },
+                     error: console.error
+                   });
   }
 
   private loadSearchResults() {
     this._store.select(selectFilter)
-        .pipe(takeUntil(this.destroy$),
-              distinctUntilChanged((prev,
-                                    curr) => prev.search === curr.search))
+        .pipe(
+          debounceTime(3000),
+          takeUntil(this.destroy$),
+          distinctUntilChanged((prev,
+                                curr) => prev.search === curr.search)
+        )
         .subscribe(res => {
-          this.isUpdating = true;
-          this.inputSearch.setValue(res.search);
-          this.isUpdating = false;
-        })
+          if(!this.isUpdating) {
+            this.isUpdating = true;
+            this.inputSearch.setValue(res.search, { emitEvent: false }); // Evite loops acionando `emitEvent: false`
+            this.isUpdating = false;
+            this.searchArticles().then(this.listener).catch(console.error);
+          }
+        });
   }
-
 }

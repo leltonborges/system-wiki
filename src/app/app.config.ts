@@ -21,6 +21,7 @@ import { provideStore } from '@ngrx/store';
 import { reducers } from './common/reducer';
 import { provideEffects } from '@ngrx/effects';
 import { articleEffects } from './common/reducer/article/article.effects';
+import { filterEffects } from './common/reducer/filter/filter.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }),
@@ -32,5 +33,5 @@ export const appConfig: ApplicationConfig = {
               providerLocalePT,
               providerDatePT,
               provideStore(reducers),
-              provideEffects(articleEffects)]
+              provideEffects(articleEffects, filterEffects)]
 };

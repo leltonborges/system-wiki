@@ -1,7 +1,3 @@
-import {
-  searchReducer,
-  SearchState
-} from './search/search.reducer';
 import { ActionReducerMap } from '@ngrx/store';
 import {
   filterReducer,
@@ -13,13 +9,11 @@ import {
 } from './article/article.reducer';
 
 export interface AppState {
-  search: SearchState;
   filter: FilterState;
   article: ArticleState;
 }
 
 export const reducers: ActionReducerMap<AppState> = {
-  search: searchReducer,
   filter: filterReducer,
   article: articleReducer
 }
