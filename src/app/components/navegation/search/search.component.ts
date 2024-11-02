@@ -100,7 +100,9 @@ export class SearchComponent
         .subscribe({
                      next: () => {
                        this.isUpdating = false;
-                       this.listener();
+                       if(this.listener && typeof this.listener === 'function') {
+                         this.listener();
+                       }
                      },
                      error: console.error
                    });
@@ -117,7 +119,7 @@ export class SearchComponent
         .subscribe(res => {
           if(!this.isUpdating) {
             this.isUpdating = true;
-            this.inputSearch.setValue(res.search, { emitEvent: false }); // Evite loops acionando `emitEvent: false`
+            this.inputSearch.setValue(res.search, { emitEvent: false });
             this.isUpdating = false;
             this.searchArticles().then(this.listener).catch(console.error);
           }

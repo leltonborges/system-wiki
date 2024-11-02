@@ -30,6 +30,7 @@ const _filterReducer = createReducer(
        ...state,
        filter: {
          ...state.filter,
+         page: 0,
          search: query
        }
      }))
