@@ -55,18 +55,24 @@ export const adjustDates = (startDate: string | undefined,
   return { startDate, endDate };
 };
 
+export const invalidSearchFilter = (search?: string): boolean => {
+  return search != null && search.trim().length < 5;
+}
+
 export const filterValid = (filter: Filter): Filter => {
   const page: number = isPageInvalid(filter?.page) ? 0 : filter.page;
   const pageSize: number = isPageSizeInvalid(filter?.pageSize) ? 10 : filter.pageSize;
   const endDateFilter: string = isDateInvalid(filter?.endDate) ? moment().format('YYYYMM') : filter.endDate!;
   const startDateFilter: string | undefined = isDateInvalid(filter?.startDate) ? undefined : filter.startDate;
   const { startDate, endDate } = adjustDates(startDateFilter, endDateFilter);
+  const search: string | undefined = invalidSearchFilter(filter.search) ? undefined : filter.search;
 
   return {
     ...filter,
     startDate,
     endDate,
     page,
-    pageSize
+    pageSize,
+    search
   };
 };

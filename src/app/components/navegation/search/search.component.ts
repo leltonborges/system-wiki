@@ -10,7 +10,6 @@ import {
 } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import {
-  debounceTime,
   distinctUntilChanged,
   filter,
   firstValueFrom,
@@ -30,6 +29,11 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../../common/reducer';
 import { filterActions } from '../../../common/reducer/filter/filter.actions';
 import { selectFilter } from '../../../common/reducer/filter/filter.selectors';
+import {
+  Filter,
+  invalidSearchFilter
+} from '../../../common/interface/filter';
+import { debounceTimeFilter } from '@c/core/utils/TimeUtils';
 
 @Component({
              selector: 'cs-search',
@@ -70,7 +74,7 @@ export class SearchComponent
 
   private validateSearchInput() {
     return tap((vl: string) => {
-      if(!vl || vl.length < 5) {
+      if(invalidSearchFilter(vl)) {
         this.inputSearch.reset();
         this._route.navigate(['/']).catch(console.error)
       }
@@ -79,14 +83,20 @@ export class SearchComponent
 
   private async searchArticles(): Promise<boolean> {
     const filterParams = await firstValueFrom(this._store.select(selectFilter));
-    return this._route.navigate(['/article', 'list'], { queryParams: filterParams });
+    return this._route.navigate(['/article', 'list'],
+                                {
+                                  queryParams: filterParams,
+                                  replaceUrl: true,
+                                  queryParamsHandling: 'merge'
+                                }
+    );
   }
 
   private listenForInputChanges() {
     this.inputSearch
         .valueChanges
         .pipe(
-          debounceTime(3000),
+          debounceTimeFilter(),
           this.validateSearchInput(),
           takeUntil(this.destroy$),
           filter(() => !this.isUpdating),
@@ -111,10 +121,10 @@ export class SearchComponent
   private loadSearchResults() {
     this._store.select(selectFilter)
         .pipe(
-          debounceTime(3000),
+          debounceTimeFilter(),
           takeUntil(this.destroy$),
-          distinctUntilChanged((prev,
-                                curr) => prev.search === curr.search)
+          distinctUntilChanged((prev: Filter,
+                                curr: Filter) => prev.search === curr.search)
         )
         .subscribe(res => {
           if(!this.isUpdating) {
