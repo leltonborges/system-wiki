@@ -17,12 +17,12 @@ export class ArticleService {
   constructor(private readonly httpClient: HttpClient) {}
 
   findAllByFilterPage(filter: Filter): Observable<PageArticles> {
-    const url = `${ this.API }/article/list/status/1?page=${ filter.page - 1 }&size=${ filter.pageSize }`;
+    const url = `${ this.API }/article/list/status/1?page=${ filter.page }&size=${ filter.pageSize }`;
     return this.httpClient.get<PageArticles>(url);
   }
 
   findAllSearch(filter: Filter): Observable<PageArticles> {
-    const url = `${ this.API }/article/search?keyword=${ filter.search }&page=${ filter.page - 1 }&size=${ filter.pageSize }`;
+    const url = `${ this.API }/article/search?keyword=${ filter.search }&page=${ filter.page }&size=${ filter.pageSize }`;
     return this.httpClient.get<PageArticles>(url);
   }
 

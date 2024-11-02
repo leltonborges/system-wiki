@@ -12,7 +12,7 @@ export interface Filter {
 }
 
 export const filterDefault: Filter = {
-  page: 1,
+  page: 0,
   pageSize: 10,
   endDate: moment().format('YYYYMM')
 }
@@ -24,7 +24,7 @@ export const invalidFilter = (filter: Filter): boolean => {
 }
 
 export const isPageInvalid = (page: number | undefined | null): boolean => {
-  return page === undefined || page === null || page < 1;
+  return page === undefined || page === null || page < 0;
 };
 
 export const isPageSizeInvalid = (pageSize: number | undefined | null): boolean => {
@@ -56,8 +56,8 @@ export const adjustDates = (startDate: string | undefined,
 };
 
 export const filterValid = (filter: Filter): Filter => {
-  const page: number = isPageInvalid(filter?.page) ? 1 : filter.page!;
-  const pageSize: number = isPageSizeInvalid(filter?.pageSize) ? 10 : filter.pageSize!;
+  const page: number = isPageInvalid(filter?.page) ? 0 : filter.page;
+  const pageSize: number = isPageSizeInvalid(filter?.pageSize) ? 10 : filter.pageSize;
   const endDateFilter: string = isDateInvalid(filter?.endDate) ? moment().format('YYYYMM') : filter.endDate!;
   const startDateFilter: string | undefined = isDateInvalid(filter?.startDate) ? undefined : filter.startDate;
   const { startDate, endDate } = adjustDates(startDateFilter, endDateFilter);

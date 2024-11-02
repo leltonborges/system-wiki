@@ -23,6 +23,15 @@ const _filterReducer = createReducer(
       { filter }) => ({
        ...state,
        filter
+     })),
+  on(filterActions.setFieldSearch,
+     (state: FilterState,
+      { query }) => ({
+       ...state,
+       filter: {
+         ...state.filter,
+         search: query
+       }
      }))
 );
 

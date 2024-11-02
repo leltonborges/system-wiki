@@ -1,9 +1,8 @@
 import {
   Component,
   Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges
+  OnDestroy,
+  OnInit
 } from '@angular/core';
 import {
   FormControl,
@@ -12,8 +11,11 @@ import {
 import { MatIcon } from '@angular/material/icon';
 import {
   debounceTime,
+  distinctUntilChanged,
   filter,
+  firstValueFrom,
   Subject,
+  takeUntil,
   tap
 } from 'rxjs';
 import { Router } from '@angular/router';
@@ -24,8 +26,8 @@ import {
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../common/reducer';
-import { selectSearchQuery } from '../../../common/reducer/search/search.selectors';
-import { searchActions } from '../../../common/reducer/search/search.actions';
+import { filterActions } from '../../../common/reducer/filter/filter.actions';
+import { selectFilter } from '../../../common/reducer/filter/filter.selectors';
 
 @Component({
              selector: 'cs-search',
@@ -42,38 +44,68 @@ import { searchActions } from '../../../common/reducer/search/search.actions';
            })
 export class SearchComponent
   implements OnInit,
-             OnChanges {
+             OnDestroy {
+  readonly debounce$: Subject<string> = new Subject<string>();
+  private readonly destroy$ = new Subject<void>();
   readonly inputSearch = new FormControl();
   @Input({ alias: 'modal' })
   isModal: boolean = false;
-  private readonly _debounce$: Subject<string> = new Subject<string>();
+  private isUpdating: boolean = false;
   @Input() listener!: () => void;
 
   constructor(private readonly _route: Router,
               private readonly _store: Store<AppState>) {
-    this._store.select(selectSearchQuery).subscribe(res => {
-      this.inputSearch.setValue(res);
-    })
   }
 
-  get debounce$(): Subject<string> {
-    return this._debounce$;
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    this._store.dispatch(searchActions.setSearchQuery({ query: this.inputSearch.value }));
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   ngOnInit(): void {
-    this.debounce$.pipe(tap(vl => this._store.dispatch(searchActions.setSearchQuery({ query: vl }))),
-                        filter(res => !!res && res.length > 5),
-                        debounceTime(3000))
-        .subscribe(result => {
-          this.searchArticles(result).then(this.listener).catch(console.error)
+    this.loadSearchResults();
+    this.listenForInputChanges();
+    this.debounce$.pipe(debounceTime(3000),
+                        tap(vl => {
+                          if(!vl || vl.length < 5) {
+                            this.inputSearch.reset();
+                            this._route.navigate(['/']).catch(console.error)
+                          }
+                        }),
+                        filter(res => !!res && res.length >= 5)
+    )
+        .subscribe(() => {
+          this.searchArticles().then(this.listener).catch(console.error)
         });
   }
 
-  private searchArticles(result: string) {
-    return this._route.navigate(['/article', 'list'], { queryParams: { search: result } });
+  private async searchArticles(): Promise<boolean> {
+    const filterParams = await firstValueFrom(this._store.select(selectFilter));
+    return this._route.navigate(['/article', 'list'], { queryParams: filterParams });
   }
+
+  private listenForInputChanges() {
+    this.inputSearch
+        .valueChanges
+        .pipe(takeUntil(this.destroy$),
+              filter(() => !this.isUpdating),
+              distinctUntilChanged())
+        .subscribe(value => {
+          this._store.dispatch(filterActions.setFieldSearch({ query: this.inputSearch.value }));
+
+        })
+  }
+
+  private loadSearchResults() {
+    this._store.select(selectFilter)
+        .pipe(takeUntil(this.destroy$),
+              distinctUntilChanged((prev,
+                                    curr) => prev.search === curr.search))
+        .subscribe(res => {
+          this.isUpdating = true;
+          this.inputSearch.setValue(res.search);
+          this.isUpdating = false;
+        })
+  }
+
 }
