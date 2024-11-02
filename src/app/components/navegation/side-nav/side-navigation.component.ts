@@ -35,17 +35,16 @@ import {
   Filter,
   filterDefault
 } from '../../../common/interface/filter';
-import {
-  of,
-  switchMap
-} from 'rxjs';
 import { MatSidenav } from '@angular/material/sidenav';
 import { SelectTagComponent } from '@c/core/components/select-tag/select-tag.component';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../common/reducer';
 import { selectFilter } from '../../../common/reducer/filter/filter.selectors';
+import {
+  parseMoment,
+  parseYearMonth
+} from '@c/core/utils/TimeUtils';
 import { filterActions } from '../../../common/reducer/filter/filter.actions';
-import { debounceTimeFilter } from '@c/core/utils/TimeUtils';
 
 const FORMAT_DATE = {
   parse: {
@@ -106,7 +105,7 @@ export class SideNavigationComponent
           this._tags = tags;
           this.tagsOptions = tags;
           this.subscribeToFilterChanges();
-          this.listenForInputChanges();
+          // this.listenForInputChanges();
         });
   }
 
@@ -121,6 +120,7 @@ export class SideNavigationComponent
       return;
     }
     const filter = this.processFilterForm();
+    this._store.dispatch(filterActions.setFilterAction({ filter }))
     this._route.navigate(['article', 'list'],
                          {
                            queryParams: filter,
@@ -133,14 +133,16 @@ export class SideNavigationComponent
 
   private processFilterForm(): Filter {
     const { title, author, tag, startDate, endDate } = this.formFilter.controls;
+    const yearMonthStart = parseYearMonth(startDate);
+    const yearMonthEnd = parseYearMonth(endDate);
     const selectedTag = this.getTag(tag.value?.toUpperCase());
     return {
       ...filterDefault,
       title: title.value,
       authorName: author.value,
       tagId: selectedTag?.id,
-      startDate: startDate?.value,
-      endDate: endDate?.value
+      startDate: yearMonthStart,
+      endDate: yearMonthEnd
     };
   }
 
@@ -174,18 +176,10 @@ export class SideNavigationComponent
           if(filter.tagId) {
             tag = this.getTag(filter.tagId)?.name;
           }
-          this.formFilter.patchValue({ ...filter, tag }, { emitEvent: false });
+          const startDate = parseMoment(filter.startDate);
+          const endDate = parseMoment(filter.endDate);
+          this.formFilter.patchValue({ ...filter, tag, startDate, endDate }, { emitEvent: false });
         });
-  }
-
-  private listenForInputChanges() {
-    this.formFilter
-        .valueChanges
-        .pipe(debounceTimeFilter(),
-              switchMap(() => of(this.processFilterForm())))
-        .subscribe((filter: Filter) => {
-          this._store.dispatch(filterActions.setFilterAction({ filter }));
-        })
   }
 
   private getTag(nameOrId: string): Tag | undefined {

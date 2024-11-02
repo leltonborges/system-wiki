@@ -1,6 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {
+  HttpClient,
+  HttpParams
+} from '@angular/common/http';
+import {
+  EMPTY,
+  Observable
+} from 'rxjs';
 import { PageArticles } from '@c/articles/model/page-articles';
 import { ArticleDetail } from '@c/articles/model/article-detail';
 import { environment } from '../../../environments/environment';
@@ -17,13 +23,24 @@ export class ArticleService {
   constructor(private readonly httpClient: HttpClient) {}
 
   findAllByFilterPage(filter: Filter): Observable<PageArticles> {
-    const url = `${ this.API }/article/list/status/1?page=${ filter.page }&size=${ filter.pageSize }`;
-    return this.httpClient.get<PageArticles>(url);
+    const cleanFilter = Object.fromEntries(
+      Object.entries(filter).filter(([_, value]) => value != null)
+    );
+
+    const params = new HttpParams({
+                                    fromObject: cleanFilter
+                                  });
+    const url = `${ this.API }/article/list/status/1`;
+    return this.httpClient.get<PageArticles>(url, { params });
   }
 
   findAllSearch(filter: Filter): Observable<PageArticles> {
-    const url = `${ this.API }/article/search?keyword=${ filter.search }&page=${ filter.page }&size=${ filter.pageSize }`;
-    return this.httpClient.get<PageArticles>(url);
+    if(!filter.search || filter.search.trim() === '') return EMPTY;
+    const params = new HttpParams().set('page', filter.page)
+                                   .set('pageSize', filter.pageSize)
+                                   .set('keyword', filter.search);
+    const url = `${ this.API }/article/search`;
+    return this.httpClient.get<PageArticles>(url, { params });
   }
 
   findByID(id: string): Observable<ArticleDetail> {

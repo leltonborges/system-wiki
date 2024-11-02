@@ -1,12 +1,16 @@
 import moment from 'moment';
+import {
+  momentToYearMonth,
+  parseMoment
+} from '@c/core/utils/TimeUtils';
 
 export interface Filter {
   title?: string;
   authorName?: string;
   search?: string;
   tagId?: string;
-  startDate?: string;
-  endDate?: string;
+  startDate?: number;
+  endDate?: number;
   page: number;
   pageSize: number;
 }
@@ -14,7 +18,7 @@ export interface Filter {
 export const filterDefault: Filter = {
   page: 0,
   pageSize: 10,
-  endDate: moment().format('YYYYMM')
+  endDate: momentToYearMonth(moment())
 }
 export const invalidFilter = (filter: Filter): boolean => {
   if(isPageInvalid(filter?.page)) return true;
@@ -31,28 +35,30 @@ export const isPageSizeInvalid = (pageSize: number | undefined | null): boolean 
   return pageSize === undefined || pageSize === null || pageSize < 10;
 };
 
-function isDateFuture(date: string) {
-  return date > moment().format('YYYYMM');
+function isDateFuture(yearMonth: number) {
+  return yearMonth > momentToYearMonth(moment());
 }
 
-export const isDateInvalid = (date: string | undefined | null): boolean => {
-  return date === undefined || date === null || isDateFuture(date);
+export const isDateInvalid = (yearMonth?: number): boolean => {
+  return yearMonth == undefined || isDateFuture(yearMonth);
 };
 
-export const reversedDates = (startDate: string | undefined,
-                              endDate: string): boolean => {
-  return !isDateInvalid(startDate) && moment(startDate, 'YYYYMM').isAfter(moment(endDate, 'YYYYMM'));
+export const reversedDates = (yearMonthStart?: number,
+                              yearMonthEnd?: number): boolean => {
+  return !isDateInvalid(yearMonthStart) &&
+    !isDateInvalid(yearMonthEnd) &&
+    parseMoment(yearMonthStart)!.isAfter(parseMoment(yearMonthEnd));
 }
 
-export const adjustDates = (startDate: string | undefined,
-                            endDate: string): { startDate: string | undefined, endDate: string } => {
-  if(reversedDates(startDate, endDate)) {
-    const temp = startDate!;
-    startDate = endDate;
-    endDate = temp;
+export const adjustDates = (startYearMonth?: number,
+                            endYearMonth?: number): { startDate?: number, endDate?: number } => {
+  if(reversedDates(startYearMonth, endYearMonth)) {
+    const temp = startYearMonth!;
+    startYearMonth = endYearMonth;
+    endYearMonth = temp;
   }
 
-  return { startDate, endDate };
+  return { startDate: startYearMonth, endDate: endYearMonth };
 };
 
 export const invalidSearchFilter = (search?: string): boolean => {
@@ -62,8 +68,8 @@ export const invalidSearchFilter = (search?: string): boolean => {
 export const filterValid = (filter: Filter): Filter => {
   const page: number = isPageInvalid(filter?.page) ? 0 : filter.page;
   const pageSize: number = isPageSizeInvalid(filter?.pageSize) ? 10 : filter.pageSize;
-  const endDateFilter: string = isDateInvalid(filter?.endDate) ? moment().format('YYYYMM') : filter.endDate!;
-  const startDateFilter: string | undefined = isDateInvalid(filter?.startDate) ? undefined : filter.startDate;
+  const endDateFilter: number = isDateInvalid(filter?.endDate) ? momentToYearMonth(moment()) : filter.endDate!;
+  const startDateFilter: number | undefined = isDateInvalid(filter?.startDate) ? undefined : filter.startDate;
   const { startDate, endDate } = adjustDates(startDateFilter, endDateFilter);
   const search: string | undefined = invalidSearchFilter(filter.search) ? undefined : filter.search;
 
