@@ -20,6 +20,7 @@ ADD https://github.com/kyubisation/angular-server-side-configuration/releases/do
 RUN chmod +x /usr/sbin/ngssc
 
 COPY --from=build /app/dist/sistem-wiki/browser /usr/share/nginx/html
+COPY ./nginx.conf  /etc/nginx/conf.d/default.conf
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
