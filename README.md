@@ -25,15 +25,15 @@ As seguintes ferramentas foram utilizadas no desenvolvimento do Front-end:
 
 ### Home Page
 
-![Home Page](./imgs/Home.png)
+![Home Page](img/home.png)
 
 ### Menu de filtros
 
-![Home Page](./imgs/Home-Filter.png)
+![Home Page](img/filter.png)
 
 ### Artigo Demo
 
-![Artigo Demo](./imgs/article-detail.png)
+![Artigo Demo](img/article-detail.png)
 ## Execução
 
 ### Build para execução
