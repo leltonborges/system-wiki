@@ -21,6 +21,19 @@ As seguintes ferramentas foram utilizadas no desenvolvimento do Front-end:
 - [NgRx](https://ngrx.io/)
 - [Sass](https://sass-lang.com/)
 
+## Demonstrativos
+
+### Home Page
+
+![Home Page](./imgs/Home.png)
+
+### Menu de filtros
+
+![Home Page](./imgs/Home-Filter.png)
+
+### Artigo Demo
+
+![Artigo Demo](./imgs/article-detail.png)
 ## Execução
 
 ### Build para execução
