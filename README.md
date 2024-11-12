@@ -20,6 +20,7 @@ As seguintes ferramentas foram utilizadas no desenvolvimento do Front-end:
 - [Node.js](https://nodejs.org/en)
 - [NgRx](https://ngrx.io/)
 - [Sass](https://sass-lang.com/)
+  - [Docker](https://docs.docker.com/engine/install/) "Opcional"
 
 ## Demonstrativos
 
