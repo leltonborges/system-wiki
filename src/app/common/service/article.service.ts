@@ -55,4 +55,10 @@ export class ArticleService {
          article: ArticleNew): Observable<ArticleDetail> {
     return this.httpClient.put<ArticleDetail>(`${ this.API }/article/${ idArticle }/update`, article);
   }
+
+  disable(id: string): Observable<boolean> {
+    const body = { newStatus: 'INACTIVE' };
+    return this.httpClient.patch<boolean>(`${ this.API }/article/${ id }/change/status`, body);
+  }
+
 }

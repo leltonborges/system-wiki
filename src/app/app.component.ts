@@ -44,6 +44,7 @@ export class AppComponent
   implements OnDestroy {
   desktopQuery!: MediaQueryList;
   private readonly _queryListenerDesktop!: () => void;
+  readonly year: number = new Date().getFullYear();
 
   constructor(readonly _media: MediaMatcher,
               readonly _detectorRef: ChangeDetectorRef,
