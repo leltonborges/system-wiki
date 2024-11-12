@@ -10,7 +10,13 @@ import {
   Router
 } from '@angular/router';
 import { ArticleDetail } from '@c/articles/model/article-detail';
-import { map } from 'rxjs';
+import {
+  catchError,
+  filter,
+  map,
+  of,
+  switchMap
+} from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {
   DatePipe,
@@ -28,6 +34,7 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { plugins } from '@c/articles/constants/plugins';
 import { LoadingComponent } from '@c/core/components/loading/loading.component';
 import { LoadingService } from '@c/core/components/loading/loading.service';
+import { ArticleService } from '../../../common/service/article.service';
 
 @Component({
              selector: 'cs-article-show',
@@ -58,7 +65,8 @@ export class ArticleShowComponent
               private readonly _dialogRef: DialogRef,
               private readonly _messageRef: MessageRef,
               private readonly changeDetector: ChangeDetectorRef,
-              private readonly _loadingService: LoadingService) {}
+              private readonly _loadingService: LoadingService,
+              private readonly _articleService: ArticleService) {}
 
   get content(): string {
     return this.article?.content ?? '';
@@ -107,6 +115,36 @@ export class ArticleShowComponent
                        if(result) {
                          this._router.navigate(['/', 'article', 'edit', this.article.id])
                              .catch(() => this._messageRef.error('Failed to navigate to article'));
+                       }
+                     }
+                   })
+  }
+
+  disable() {
+    this._dialogRef
+        .openDialog({
+                      title: 'Excluir',
+                      message: 'Deseja realmente excluir?'
+                    })
+        .afterClosed()
+        .pipe(filter((resp: boolean) => resp),
+              switchMap(() => this._articleService.disable(this.article.id)),
+              catchError(err => {
+                console.log('err: ', err)
+                console.error(err)
+                this._messageRef.error('OPS!! Algo deu errado, tente novamente mais tarde.')
+                return of(false);
+              }))
+        .subscribe({
+                     next: result => {
+                       if(result) {
+                         this._router.navigate([''],
+                                               {
+                                                 replaceUrl: true,
+                                                 queryParamsHandling: 'preserve',
+                                                 onSameUrlNavigation: 'reload'
+                                               })
+                             .catch(() => this._messageRef.error('Failed to navigate to articles'));
                        }
                      }
                    })

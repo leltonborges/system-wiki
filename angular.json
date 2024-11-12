@@ -69,8 +69,25 @@
           },
           "defaultConfiguration": "production"
         },
+        "ngsscbuild": {
+          "builder": "angular-server-side-configuration:ngsscbuild",
+          "options": {
+            "additionalEnvironmentVariables": [
+              "API_ARTICLE_URL",
+              "PROD"
+            ],
+            "buildTarget": "sistem-wiki:build",
+            "filePattern": "index.html",
+            "searchPattern": "src/environments/environment.ts"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "sistem-wiki:build:production"
+            }
+          }
+        },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "angular-server-side-configuration:dev-server",
           "configurations": {
             "production": {
               "buildTarget": "sistem-wiki:build:production"

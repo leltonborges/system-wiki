@@ -2,7 +2,6 @@ import {
   Component,
   ElementRef,
   Input,
-  OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
@@ -36,10 +35,16 @@ import {
   Filter,
   filterDefault
 } from '../../../common/interface/filter';
-import { FilterService } from '../../../common/service/filter.service';
-import { Subscription } from 'rxjs';
 import { MatSidenav } from '@angular/material/sidenav';
 import { SelectTagComponent } from '@c/core/components/select-tag/select-tag.component';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../common/reducer';
+import { selectFilter } from '../../../common/reducer/filter/filter.selectors';
+import {
+  parseMoment,
+  parseYearMonth
+} from '@c/core/utils/TimeUtils';
+import { filterActions } from '../../../common/reducer/filter/filter.actions';
 
 const FORMAT_DATE = {
   parse: {
@@ -76,8 +81,7 @@ const FORMAT_DATE = {
              ]
            })
 export class SideNavigationComponent
-  implements OnInit,
-             OnDestroy {
+  implements OnInit {
   readonly minDate = new Date(2020, 1, 1);
   readonly maxDate = new Date();
   readonly formFilter = this.createdFormGroup();
@@ -87,17 +91,12 @@ export class SideNavigationComponent
   @Input({ alias: 'toggle' })
   sidenav!: MatSidenav;
   private _tags!: Tags;
-  private filterSubscription!: Subscription;
 
   constructor(private readonly _messageRef: MessageRef,
               private readonly _route: Router,
-              private readonly _tagService: TagService,
-              private readonly _filterService: FilterService
+              private readonly _store: Store<AppState>,
+              private readonly _tagService: TagService
   ) {}
-
-  ngOnDestroy(): void {
-    this.filterSubscription.unsubscribe();
-  }
 
   ngOnInit(): void {
     this._tagService
@@ -106,6 +105,7 @@ export class SideNavigationComponent
           this._tags = tags;
           this.tagsOptions = tags;
           this.subscribeToFilterChanges();
+          // this.listenForInputChanges();
         });
   }
 
@@ -119,20 +119,31 @@ export class SideNavigationComponent
       this._messageRef.error('É necessário um fitro preenchido')
       return;
     }
+    const filter = this.processFilterForm();
+    this._store.dispatch(filterActions.setFilterAction({ filter }))
+    this._route.navigate(['article', 'list'],
+                         {
+                           queryParams: filter,
+                           replaceUrl: true,
+                           queryParamsHandling: 'merge'
+                         })
+        .then(() => this.sidenav?.toggle())
+        .catch(() => this._messageRef.error('Error na navegação'))
+  }
 
+  private processFilterForm(): Filter {
     const { title, author, tag, startDate, endDate } = this.formFilter.controls;
+    const yearMonthStart = parseYearMonth(startDate);
+    const yearMonthEnd = parseYearMonth(endDate);
     const selectedTag = this.getTag(tag.value?.toUpperCase());
-    const filter: Filter = {
+    return {
       ...filterDefault,
       title: title.value,
       authorName: author.value,
       tagId: selectedTag?.id,
-      startDate: startDate?.value,
-      endDate: endDate?.value
-    }
-    this._route.navigate(['article', 'list'], { queryParams: this._filterService.push(filter) })
-        .then(() => this.sidenav?.toggle())
-        .catch(() => this._messageRef.error('Error na navegação'))
+      startDate: yearMonthStart,
+      endDate: yearMonthEnd
+    };
   }
 
   setYearMonthStart(yearMonthSelect: Moment,
@@ -159,15 +170,16 @@ export class SideNavigationComponent
   }
 
   private subscribeToFilterChanges() {
-    this.filterSubscription = this._filterService
-                                  .getFilterObservable()
-                                  .subscribe((filter: Filter) => {
-                                    let tag;
-                                    if(filter.tagId) {
-                                      tag = this.getTag(filter.tagId)?.name;
-                                    }
-                                    this.formFilter.patchValue({ ...filter, tag });
-                                  });
+    this._store.select(selectFilter)
+        .subscribe((filter: Filter) => {
+          let tag;
+          if(filter.tagId) {
+            tag = this.getTag(filter.tagId)?.name;
+          }
+          const startDate = parseMoment(filter.startDate);
+          const endDate = parseMoment(filter.endDate);
+          this.formFilter.patchValue({ ...filter, tag, startDate, endDate }, { emitEvent: false });
+        });
   }
 
   private getTag(nameOrId: string): Tag | undefined {

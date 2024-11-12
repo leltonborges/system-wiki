@@ -1,4 +1,6 @@
+import 'angular-server-side-configuration/process';
+
 export const environment = {
-  production: true,
-  API_ARTICLE_URL: 'http://localhost:8080'
+  production: process.env['PROD'] !== 'false',
+  API_ARTICLE_URL: process.env['API_ARTICLE_URL'] ?? 'https://back.leltoncrazy.com'
 };

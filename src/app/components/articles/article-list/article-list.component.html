@@ -1,6 +1,6 @@
-<ng-container *ngIf="(articles$ | async)?.length; else notFound">
+<ng-container *ngIf="hasArticles(); else notFound">
   <section>
-    @for (item of (articles$ | async); track item.id) {
+    @for (item of (articles$ | async)?.data; track item.id) {
       <cs-article [article]="item"></cs-article>
     }
   </section>
@@ -8,7 +8,6 @@
                  [length]="length"
                  [pageIndex]="pageIndex"
                  [pageSize]="pageSize"
-                 [hidePageSize]="false"
                  [pageSizeOptions]="pageSizeOptions"
                  [showFirstLastButtons]="true"
                  [style.background-color]="'unset'"

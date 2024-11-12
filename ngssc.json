@@ -1,0 +1,5 @@
+{
+  "variant": "process",
+  "environmentVariables": [],
+  "filePattern": "**/index.html"
+}

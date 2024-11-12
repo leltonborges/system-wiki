@@ -4,31 +4,20 @@ import {
   RouterStateSnapshot
 } from '@angular/router';
 import { inject } from '@angular/core';
-import { ArticleService } from '../../../common/service/article.service';
-import { Observable } from 'rxjs';
+import {
+  Observable,
+  take
+} from 'rxjs';
 import { PageArticles } from '../model/page-articles';
-import { Filter } from '../../../common/interface/filter';
-import { SearchListenerService } from '../../../common/service/search-listener.service';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../common/reducer';
+import { articleActions } from '../../../common/reducer/article/article.actions';
+import { articleSelectors } from '../../../common/reducer/article/article.selectors';
 
 export const articlesPageResolver: ResolveFn<PageArticles> = (route: ActivatedRouteSnapshot,
                                                               state: RouterStateSnapshot): Observable<PageArticles> => {
-  const articleService = inject(ArticleService);
-  const searchListenerService = inject(SearchListenerService);
-  const { title, author, tag, startDate, endDate, page, pageSize, search } = route.queryParams;
-  const filter: Filter = {
-    title,
-    authorName: author,
-    tagId: tag,
-    startDate,
-    endDate,
-    page,
-    pageSize
-  }
-
-  if(search) {
-    searchListenerService.debounce$.next(search)
-    return articleService.findAllSearch(filter)
-  }
-
-  return articleService.findAllByFilterPage(filter);
+  const store$ = inject(Store<AppState>);
+  store$.dispatch(articleActions.loadArticles())
+  return store$.select(articleSelectors.selectArticle)
+               .pipe(take(1))
 };
