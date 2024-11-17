@@ -30,6 +30,7 @@ import { articleSelectors } from '../../../common/reducer/article/article.select
 import { PageArticles } from '@c/articles/model/page-articles';
 import { filterActions } from '../../../common/reducer/filter/filter.actions';
 import { selectFilter } from '../../../common/reducer/filter/filter.selectors';
+import { LoadingComponent } from '@c/core/components/loading/loading.component';
 
 @Component({
              selector: 'cs-articles-list',
@@ -39,7 +40,8 @@ import { selectFilter } from '../../../common/reducer/filter/filter.selectors';
                MatPaginatorModule,
                AsyncPipe,
                NgIf,
-               IconSvgComponent
+               IconSvgComponent,
+               LoadingComponent
              ],
              templateUrl: './article-list.component.html',
              styleUrl: './article-list.component.sass',

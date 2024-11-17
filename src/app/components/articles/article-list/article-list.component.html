@@ -1,3 +1,4 @@
+<cs-loading/>
 <ng-container *ngIf="hasArticles(); else notFound">
   <section>
     @for (item of (articles$ | async)?.data; track item.id) {
